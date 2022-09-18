@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_presensi_dsn/constants.dart';
+import 'package:flutter_presensi_dsn/ui/home/widgets/card_item.dart';
+import 'package:flutter_presensi_dsn/ui/home/widgets/card_title.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 
 class HomeContent extends StatefulWidget {
   const HomeContent({Key? key}) : super(key: key);
@@ -9,6 +12,9 @@ class HomeContent extends StatefulWidget {
 }
 
 class _HomeContentState extends State<HomeContent> {
+  bool isLoading = false;
+  bool isStarted = false;
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -71,162 +77,7 @@ class _HomeContentState extends State<HomeContent> {
             child: ListView.builder(
                 itemCount: 5,
                 itemBuilder: (context, index) {
-                  return Column(
-                    children: [
-                      Card(
-                        child: ClipPath(
-                          child: Container(
-                            decoration: BoxDecoration(
-                              // borderRadius: BorderRadius.only(
-                              //   topLeft: Radius.circular(12.0),
-                              //   topRight: Radius.circular(12.0),
-                              // ),
-                              // border: Border(
-                              //   top: BorderSide(
-                              //     color: kPrimaryColor,
-                              //     width: 4.0,
-                              //   ),
-                              // ),
-                              gradient: const LinearGradient(
-                                colors: [kPrimaryColor, Colors.white],
-                                stops: [0.02, 0.02],
-                                begin: Alignment.topCenter,
-                                end: Alignment.bottomCenter,
-                              ),
-                              borderRadius: BorderRadius.circular(5.0),
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.all(16.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    children: [
-                                      Container(
-                                        color: kPrimaryColor,
-                                        width: 5.0,
-                                        height: 18.0,
-                                      ),
-                                      const SizedBox(width: 6.0),
-                                      Expanded(
-                                        child: Text(
-                                          'Pengenalan Pemrograman',
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .headlineSmall
-                                              ?.copyWith(fontSize: 18.0),
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                  const SizedBox(height: 4.0),
-                                  Padding(
-                                    padding: const EdgeInsets.only(left: 11.0),
-                                    child: Text(
-                                      'Pertemuan Ke-1',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodyMedium
-                                          ?.copyWith(
-                                              color: Colors.black,
-                                              fontWeight: FontWeight.w100),
-                                    ),
-                                  ),
-                                  const SizedBox(height: 8.0),
-                                  Padding(
-                                    padding: const EdgeInsets.only(left: 11.0),
-                                    child: Container(
-                                      padding: const EdgeInsets.symmetric(
-                                        horizontal: 8.0,
-                                        vertical: 4.0,
-                                      ),
-                                      decoration: BoxDecoration(
-                                          color: kAccentColor,
-                                          borderRadius:
-                                              BorderRadius.circular(5.0)),
-                                      child: Row(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          RichText(
-                                            text: const TextSpan(
-                                              children: [
-                                                TextSpan(
-                                                  text: 'Mulai\n',
-                                                  style: TextStyle(
-                                                    fontWeight: FontWeight.w400,
-                                                    fontSize: 12.0,
-                                                  ),
-                                                ),
-                                                TextSpan(
-                                                  text: 'Selesai',
-                                                  style: TextStyle(
-                                                    fontWeight: FontWeight.w400,
-                                                    fontSize: 12.0,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                          const SizedBox(width: 16.0),
-                                          RichText(
-                                            text: const TextSpan(
-                                              children: [
-                                                TextSpan(
-                                                  text: '12:00\n',
-                                                  style: TextStyle(
-                                                    fontWeight: FontWeight.w400,
-                                                    fontSize: 12.0,
-                                                  ),
-                                                ),
-                                                TextSpan(
-                                                  text: '13:00',
-                                                  style: TextStyle(
-                                                    fontWeight: FontWeight.w400,
-                                                    fontSize: 12.0,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                  const SizedBox(height: 16.0),
-                                  Container(
-                                    width: double.infinity,
-                                    alignment: Alignment.center,
-                                    child: MaterialButton(
-                                      padding: const EdgeInsets.symmetric(
-                                        horizontal: 30.0,
-                                      ),
-                                      onPressed: () {},
-                                      minWidth: 0.0,
-                                      materialTapTargetSize:
-                                          MaterialTapTargetSize.shrinkWrap,
-                                      color: kButtonColor2,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(20.0),
-                                      ),
-                                      child: const Text(
-                                        'Buat QR',
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 12.0,
-                                        ),
-                                      ),
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 8.0)
-                    ],
-                  );
+                  return const CardItem();
                 }),
           ),
         )
