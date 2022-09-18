@@ -16,6 +16,10 @@ class AuthProvider extends BaseProvider {
     await (await _presensiAppDb.db)?.rawDelete('DELETE FROM auth');
   }
 
+  Future<void> saveAuth(AuthLocal auth) async {
+    await (await _presensiAppDb.db)?.insert('auth', auth.toMap());
+  }
+
   Future<AuthLocal> getAuth() async {
     final auth = await (await _presensiAppDb.db)
         ?.rawQuery('SELECT * FROM auth ORDER BY id DESC LIMIT 1');
