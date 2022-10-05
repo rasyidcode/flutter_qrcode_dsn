@@ -22,7 +22,7 @@ class _$PerkuliahanItemSerializer
     final result = <Object?>[
       'id_jadwal',
       serializers.serialize(object.idJadwal,
-          specifiedType: const FullType(int)),
+          specifiedType: const FullType(String)),
       'tgl_jadwal',
       serializers.serialize(object.tglJadwal,
           specifiedType: const FullType(String)),
@@ -60,7 +60,7 @@ class _$PerkuliahanItemSerializer
       switch (key) {
         case 'id_jadwal':
           result.idJadwal = serializers.deserialize(value,
-              specifiedType: const FullType(int))! as int;
+              specifiedType: const FullType(String))! as String;
           break;
         case 'tgl_jadwal':
           result.tglJadwal = serializers.deserialize(value,
@@ -95,7 +95,7 @@ class _$PerkuliahanItemSerializer
 
 class _$PerkuliahanItem extends PerkuliahanItem {
   @override
-  final int idJadwal;
+  final String idJadwal;
   @override
   final String tglJadwal;
   @override
@@ -190,9 +190,9 @@ class PerkuliahanItemBuilder
     implements Builder<PerkuliahanItem, PerkuliahanItemBuilder> {
   _$PerkuliahanItem? _$v;
 
-  int? _idJadwal;
-  int? get idJadwal => _$this._idJadwal;
-  set idJadwal(int? idJadwal) => _$this._idJadwal = idJadwal;
+  String? _idJadwal;
+  String? get idJadwal => _$this._idJadwal;
+  set idJadwal(String? idJadwal) => _$this._idJadwal = idJadwal;
 
   String? _tglJadwal;
   String? get tglJadwal => _$this._tglJadwal;

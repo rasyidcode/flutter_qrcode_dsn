@@ -49,10 +49,14 @@ class _SplashPageState extends State<SplashPage> {
       child: MultiBlocListener(
         listeners: [
           BlocListener<AuthBloc, AuthState>(listener: (context, state) {
-            if (state.isHasAuth && state.isSuccess == SuccessState.authFound) {
+            if (state.isHasAuth &&
+                state.isSuccess &&
+                state.successType == AuthStateSuccessType.authFound) {
               Navigator.of(context).pushReplacement(
                   MaterialPageRoute(builder: (_) => const HomePage()));
-            } else if (state.isSuccess == SuccessState.authNotFound) {
+            } else if (state.error.isNotEmpty &&
+                !state.isSuccess &&
+                state.errorType == AuthStateErrorType.authNotFound) {
               Navigator.of(context).pushReplacement(
                   MaterialPageRoute(builder: (_) => const LoginPage()));
             }

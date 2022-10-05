@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_presensi_dsn/constants.dart';
 import 'package:flutter_presensi_dsn/ui/home/widgets/card_item.dart';
-import 'package:flutter_presensi_dsn/ui/home/widgets/card_title.dart';
-import 'package:qr_flutter/qr_flutter.dart';
 
 class HomeContent extends StatefulWidget {
   const HomeContent({Key? key}) : super(key: key);
@@ -77,7 +75,7 @@ class _HomeContentState extends State<HomeContent> {
             child: ListView.builder(
                 itemCount: 5,
                 itemBuilder: (context, index) {
-                  return const CardItem();
+                  return const CardItem(hideQR: true);
                 }),
           ),
         )

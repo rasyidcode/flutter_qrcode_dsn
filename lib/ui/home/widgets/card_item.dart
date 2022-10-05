@@ -6,7 +6,8 @@ import 'package:flutter_presensi_dsn/ui/home/widgets/perkuliahan_time.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
 class CardItem extends StatelessWidget {
-  const CardItem({Key? key}) : super(key: key);
+  final bool hideQR;
+  const CardItem({required this.hideQR, Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -55,26 +56,38 @@ class CardItem extends StatelessWidget {
                       // CARD BODY
                       const PerkuliahanTime(),
                       const SizedBox(height: 16.0),
-                      Align(
-                        alignment: Alignment.center,
-                        child: QrImage(
-                          data: '123456',
-                          version: QrVersions.auto,
-                          size: 150,
-                        ),
-                      ),
-                      const SizedBox(height: 16.0),
+                      !hideQR
+                          ? Column(
+                              children: [
+                                Align(
+                                  alignment: Alignment.center,
+                                  child: QrImage(
+                                    data: '123456',
+                                    version: QrVersions.auto,
+                                    size: 150,
+                                  ),
+                                ),
+                                const SizedBox(height: 16.0),
+                              ],
+                            )
+                          : Container(),
                       // MAHASISWA LIST
-                      const CardTitle(title: 'Daftar Mahasiswa'),
-                      const SizedBox(height: 4.0),
-                      ListView.builder(
-                          physics: const ScrollPhysics(),
-                          shrinkWrap: true,
-                          itemCount: 5,
-                          itemBuilder: (context, index) {
-                            return const MahasiswaItem();
-                          }),
-                      const SizedBox(height: 16.0),
+                      !hideQR
+                          ? Column(
+                              children: [
+                                const CardTitle(title: 'Daftar Mahasiswa'),
+                                const SizedBox(height: 4.0),
+                                ListView.builder(
+                                    physics: const ScrollPhysics(),
+                                    shrinkWrap: true,
+                                    itemCount: 5,
+                                    itemBuilder: (context, index) {
+                                      return const MahasiswaItem();
+                                    }),
+                                const SizedBox(height: 16.0),
+                              ],
+                            )
+                          : Container(),
                       Container(
                         width: double.infinity,
                         alignment: Alignment.center,
@@ -99,30 +112,32 @@ class CardItem extends StatelessWidget {
                           ),
                         ),
                       ),
-                      Container(
-                        width: double.infinity,
-                        alignment: Alignment.center,
-                        child: MaterialButton(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 30.0,
-                          ),
-                          onPressed: () {},
-                          minWidth: 0.0,
-                          materialTapTargetSize:
-                              MaterialTapTargetSize.shrinkWrap,
-                          color: kAccentColor,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20.0),
-                          ),
-                          child: const Text(
-                            'Akhiri Perkuliahan',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 12.0,
-                            ),
-                          ),
-                        ),
-                      )
+                      !hideQR
+                          ? Container(
+                              width: double.infinity,
+                              alignment: Alignment.center,
+                              child: MaterialButton(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 30.0,
+                                ),
+                                onPressed: () {},
+                                minWidth: 0.0,
+                                materialTapTargetSize:
+                                    MaterialTapTargetSize.shrinkWrap,
+                                color: kAccentColor,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20.0),
+                                ),
+                                child: const Text(
+                                  'Akhiri Perkuliahan',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 12.0,
+                                  ),
+                                ),
+                              ),
+                            )
+                          : Container()
                     ],
                   ),
                 ),

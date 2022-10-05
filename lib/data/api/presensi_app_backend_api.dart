@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter_presensi_dsn/data/execptions/api_access_error_exception.dart';
@@ -42,7 +43,7 @@ class PresensiAppBackendApi {
       throw ApiAccessErrorException(jsonDecode(response.body)['message']);
     }
 
-    return jsonDecode(response.body)['message'];
+    return jsonDecode(response.body)['access_token'];
   }
 
   // auth - logout
@@ -65,7 +66,7 @@ class PresensiAppBackendApi {
       {required String accessToken}) async {
     final response =
         await _client.get(Uri.parse('$baseApiURL/dosen/perkuliahan'), headers: {
-      HttpHeaders.authorizationHeader: accessToken,
+      HttpHeaders.authorizationHeader: 'Bearer $accessToken',
     });
     if (response.statusCode != 200) {
       if (response.statusCode == 401) {

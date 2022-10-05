@@ -14,7 +14,11 @@ class _$AuthState extends AuthState {
   @override
   final String error;
   @override
-  final SuccessState isSuccess;
+  final bool isSuccess;
+  @override
+  final AuthStateSuccessType successType;
+  @override
+  final AuthStateErrorType errorType;
 
   factory _$AuthState([void Function(AuthStateBuilder)? updates]) =>
       (new AuthStateBuilder()..update(updates))._build();
@@ -23,12 +27,17 @@ class _$AuthState extends AuthState {
       {required this.auth,
       required this.isLoading,
       required this.error,
-      required this.isSuccess})
+      required this.isSuccess,
+      required this.successType,
+      required this.errorType})
       : super._() {
     BuiltValueNullFieldError.checkNotNull(auth, r'AuthState', 'auth');
     BuiltValueNullFieldError.checkNotNull(isLoading, r'AuthState', 'isLoading');
     BuiltValueNullFieldError.checkNotNull(error, r'AuthState', 'error');
     BuiltValueNullFieldError.checkNotNull(isSuccess, r'AuthState', 'isSuccess');
+    BuiltValueNullFieldError.checkNotNull(
+        successType, r'AuthState', 'successType');
+    BuiltValueNullFieldError.checkNotNull(errorType, r'AuthState', 'errorType');
   }
 
   @override
@@ -45,14 +54,21 @@ class _$AuthState extends AuthState {
         auth == other.auth &&
         isLoading == other.isLoading &&
         error == other.error &&
-        isSuccess == other.isSuccess;
+        isSuccess == other.isSuccess &&
+        successType == other.successType &&
+        errorType == other.errorType;
   }
 
   @override
   int get hashCode {
     return $jf($jc(
-        $jc($jc($jc(0, auth.hashCode), isLoading.hashCode), error.hashCode),
-        isSuccess.hashCode));
+        $jc(
+            $jc(
+                $jc($jc($jc(0, auth.hashCode), isLoading.hashCode),
+                    error.hashCode),
+                isSuccess.hashCode),
+            successType.hashCode),
+        errorType.hashCode));
   }
 
   @override
@@ -61,7 +77,9 @@ class _$AuthState extends AuthState {
           ..add('auth', auth)
           ..add('isLoading', isLoading)
           ..add('error', error)
-          ..add('isSuccess', isSuccess))
+          ..add('isSuccess', isSuccess)
+          ..add('successType', successType)
+          ..add('errorType', errorType))
         .toString();
   }
 }
@@ -81,9 +99,18 @@ class AuthStateBuilder implements Builder<AuthState, AuthStateBuilder> {
   String? get error => _$this._error;
   set error(String? error) => _$this._error = error;
 
-  SuccessState? _isSuccess;
-  SuccessState? get isSuccess => _$this._isSuccess;
-  set isSuccess(SuccessState? isSuccess) => _$this._isSuccess = isSuccess;
+  bool? _isSuccess;
+  bool? get isSuccess => _$this._isSuccess;
+  set isSuccess(bool? isSuccess) => _$this._isSuccess = isSuccess;
+
+  AuthStateSuccessType? _successType;
+  AuthStateSuccessType? get successType => _$this._successType;
+  set successType(AuthStateSuccessType? successType) =>
+      _$this._successType = successType;
+
+  AuthStateErrorType? _errorType;
+  AuthStateErrorType? get errorType => _$this._errorType;
+  set errorType(AuthStateErrorType? errorType) => _$this._errorType = errorType;
 
   AuthStateBuilder();
 
@@ -94,6 +121,8 @@ class AuthStateBuilder implements Builder<AuthState, AuthStateBuilder> {
       _isLoading = $v.isLoading;
       _error = $v.error;
       _isSuccess = $v.isSuccess;
+      _successType = $v.successType;
+      _errorType = $v.errorType;
       _$v = null;
     }
     return this;
@@ -124,7 +153,11 @@ class AuthStateBuilder implements Builder<AuthState, AuthStateBuilder> {
               error: BuiltValueNullFieldError.checkNotNull(
                   error, r'AuthState', 'error'),
               isSuccess: BuiltValueNullFieldError.checkNotNull(
-                  isSuccess, r'AuthState', 'isSuccess'));
+                  isSuccess, r'AuthState', 'isSuccess'),
+              successType: BuiltValueNullFieldError.checkNotNull(
+                  successType, r'AuthState', 'successType'),
+              errorType: BuiltValueNullFieldError.checkNotNull(
+                  errorType, r'AuthState', 'errorType'));
     } catch (_) {
       late String _$failedField;
       try {

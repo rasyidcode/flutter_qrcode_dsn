@@ -5,13 +5,23 @@ import 'package:flutter_presensi_dsn/data/models/auth_local.dart';
 
 part 'auth_state.g.dart';
 
-enum SuccessState { initial, authNotFound, authFound }
+enum AuthStateSuccessType { initial, authFound, tokenRenewed, logoutSucceed }
+
+enum AuthStateErrorType {
+  initial,
+  authNotFound,
+  failedRenewToken,
+  unknown,
+  logoutFailed
+}
 
 abstract class AuthState implements Built<AuthState, AuthStateBuilder> {
   AuthLocal get auth;
   bool get isLoading;
   String get error;
-  SuccessState get isSuccess;
+  bool get isSuccess;
+  AuthStateSuccessType get successType;
+  AuthStateErrorType get errorType;
 
   bool get isHasAuth =>
       auth.accessToken!.isNotEmpty &&
@@ -27,7 +37,9 @@ abstract class AuthState implements Built<AuthState, AuthStateBuilder> {
     return AuthState((b) => b
       ..isLoading = false
       ..error = ''
-      ..isSuccess = SuccessState.initial
+      ..isSuccess = false
+      ..successType = AuthStateSuccessType.initial
+      ..errorType = AuthStateErrorType.initial
       ..auth.replace(AuthLocal((b) => b
         ..accessToken = ''
         ..refreshToken = ''
@@ -39,7 +51,9 @@ abstract class AuthState implements Built<AuthState, AuthStateBuilder> {
     return AuthState((b) => b
       ..isLoading = true
       ..error = ''
-      ..isSuccess = SuccessState.initial
+      ..isSuccess = false
+      ..successType = AuthStateSuccessType.initial
+      ..errorType = AuthStateErrorType.initial
       ..auth.replace(AuthLocal((b) => b
         ..accessToken = ''
         ..refreshToken = ''
@@ -47,19 +61,24 @@ abstract class AuthState implements Built<AuthState, AuthStateBuilder> {
         ..createdAt = 0)));
   }
 
-  factory AuthState.success(AuthLocal auth) {
+  factory AuthState.success(AuthLocal auth,
+      {required AuthStateSuccessType type}) {
     return AuthState((b) => b
       ..isLoading = false
       ..error = ''
-      ..isSuccess = SuccessState.authFound
+      ..successType = type
+      ..errorType = AuthStateErrorType.initial
+      ..isSuccess = true
       ..auth.replace(auth));
   }
 
-  factory AuthState.fail(String error) {
+  factory AuthState.error(String err, {required AuthStateErrorType type}) {
     return AuthState((b) => b
       ..isLoading = false
-      ..error = ''
-      ..isSuccess = SuccessState.authNotFound
+      ..error = err
+      ..isSuccess = false
+      ..successType = AuthStateSuccessType.initial
+      ..errorType = type
       ..auth.replace(AuthLocal((b) => b
         ..accessToken = ''
         ..refreshToken = ''

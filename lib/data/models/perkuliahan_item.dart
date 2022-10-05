@@ -11,7 +11,7 @@ part 'perkuliahan_item.g.dart';
 abstract class PerkuliahanItem
     implements Built<PerkuliahanItem, PerkuliahanItemBuilder> {
   @BuiltValueField(wireName: 'id_jadwal')
-  int get idJadwal;
+  String get idJadwal;
   @BuiltValueField(wireName: 'tgl_jadwal')
   String get tglJadwal;
   @BuiltValueField(wireName: 'kode_matkul')

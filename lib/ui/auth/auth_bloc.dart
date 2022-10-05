@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_presensi_dsn/data/execptions/api_access_error_exception.dart';
 import 'package:flutter_presensi_dsn/data/execptions/provider_error_exception.dart';
@@ -33,11 +31,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       try {
         final auth = await _authRepository.getAuth();
 
-        emit(AuthState.success(auth));
+        emit(AuthState.success(auth, type: AuthStateSuccessType.authFound));
       } on ProviderErrorException catch (e) {
-        emit(AuthState.fail(e.message));
+        emit(AuthState.error(e.message, type: AuthStateErrorType.authNotFound));
       } on Exception catch (_) {
-        emit(AuthState.fail('Something went wrong'));
+        emit(AuthState.error('Something went wrong',
+            type: AuthStateErrorType.unknown));
       }
     });
     on<RenewToken>((event, emit) async {
@@ -45,13 +44,16 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
       try {
         final auth = await _authRepository.renewToken(event.auth);
-        emit(AuthState.success(auth));
+        emit(AuthState.success(auth, type: AuthStateSuccessType.tokenRenewed));
       } on ApiAccessErrorException catch (e) {
-        emit(AuthState.fail(e.message));
+        emit(AuthState.error(e.message,
+            type: AuthStateErrorType.failedRenewToken));
       } on RepositoryErrorException catch (e) {
-        emit(AuthState.fail(e.message));
+        emit(AuthState.error(e.message,
+            type: AuthStateErrorType.failedRenewToken));
       } on Exception catch (_) {
-        emit(AuthState.fail('Something went wrong'));
+        emit(AuthState.error('Something went wrong',
+            type: AuthStateErrorType.unknown));
       }
     });
     on<Logout>((event, emit) async {
@@ -59,13 +61,15 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
       try {
         await _authRepository.logout(event.accessToken, event.refreshToken);
-        emit(AuthState.success(state.auth));
+        emit(AuthState.success(state.auth,
+            type: AuthStateSuccessType.logoutSucceed));
       } on ApiAccessErrorException catch (e) {
-        emit(AuthState.fail(e.message));
+        emit(AuthState.error(e.message, type: AuthStateErrorType.logoutFailed));
       } on RepositoryErrorException catch (e) {
-        emit(AuthState.fail(e.message));
+        emit(AuthState.error(e.message, type: AuthStateErrorType.logoutFailed));
       } on Exception catch (_) {
-        emit(AuthState.fail('Something went wrong'));
+        emit(AuthState.error('Something went wrong',
+            type: AuthStateErrorType.unknown));
       }
     });
   }
