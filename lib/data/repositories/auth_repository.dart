@@ -1,6 +1,7 @@
+import 'dart:developer';
+
 import 'package:flutter_presensi_dsn/data/api/presensi_app_backend_api.dart';
 import 'package:flutter_presensi_dsn/data/execptions/repository_error_exception.dart';
-import 'package:flutter_presensi_dsn/data/models/auth.dart';
 import 'package:flutter_presensi_dsn/data/models/auth_local.dart';
 import 'package:flutter_presensi_dsn/data/providers/auth_provider.dart';
 import 'package:flutter_presensi_dsn/data/providers/base_provider.dart';
@@ -11,7 +12,7 @@ class AuthRepository {
 
   AuthRepository(this._presensiAppApi, this._baseProvider);
 
-  Future<Auth> login(String username, String password) async {
+  Future<void> login(String username, String password) async {
     final result =
         await _presensiAppApi.login(username: username, password: password);
 
@@ -24,8 +25,6 @@ class AuthRepository {
       ..accessToken = result.accessToken
       ..refreshToken = result.refreshToken
       ..createdAt = DateTime.now().millisecondsSinceEpoch ~/ 1000));
-
-    return result;
   }
 
   Future<String?> logout(String accessToken, String refreshToken) async {

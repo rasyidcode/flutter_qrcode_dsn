@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_presensi_dsn/data/execptions/api_access_error_exception.dart';
 import 'package:flutter_presensi_dsn/data/execptions/provider_error_exception.dart';
@@ -30,6 +32,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
       try {
         final auth = await _authRepository.getAuth();
+
         emit(AuthState.success(auth));
       } on ProviderErrorException catch (e) {
         emit(AuthState.fail(e.message));

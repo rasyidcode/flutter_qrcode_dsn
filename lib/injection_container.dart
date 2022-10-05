@@ -5,6 +5,7 @@ import 'package:flutter_presensi_dsn/data/providers/auth_provider.dart';
 import 'package:flutter_presensi_dsn/data/repositories/app_repository.dart';
 import 'package:flutter_presensi_dsn/data/repositories/auth_repository.dart';
 import 'package:flutter_presensi_dsn/ui/auth/auth_bloc.dart';
+import 'package:flutter_presensi_dsn/ui/login/login_bloc.dart';
 import 'package:flutter_presensi_dsn/ui/splash/splash_bloc.dart';
 import 'package:flutter_presensi_dsn/ui/welcome/welcome_bloc.dart';
 import 'package:kiwi/kiwi.dart';
@@ -29,5 +30,6 @@ Future initKiwi() async {
     // bloc
     ..registerFactory((container) => AuthBloc(container.resolve()))
     ..registerFactory((container) => SplashBloc(container.resolve()))
-    ..registerFactory((container) => WelcomeBloc(container.resolve()));
+    ..registerFactory((container) => WelcomeBloc(container.resolve()))
+    ..registerFactory((container) => LoginBloc(container.resolve()));
 }

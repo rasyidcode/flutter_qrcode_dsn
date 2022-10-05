@@ -13,16 +13,22 @@ class _$AuthState extends AuthState {
   final bool isLoading;
   @override
   final String error;
+  @override
+  final SuccessState isSuccess;
 
   factory _$AuthState([void Function(AuthStateBuilder)? updates]) =>
       (new AuthStateBuilder()..update(updates))._build();
 
   _$AuthState._(
-      {required this.auth, required this.isLoading, required this.error})
+      {required this.auth,
+      required this.isLoading,
+      required this.error,
+      required this.isSuccess})
       : super._() {
     BuiltValueNullFieldError.checkNotNull(auth, r'AuthState', 'auth');
     BuiltValueNullFieldError.checkNotNull(isLoading, r'AuthState', 'isLoading');
     BuiltValueNullFieldError.checkNotNull(error, r'AuthState', 'error');
+    BuiltValueNullFieldError.checkNotNull(isSuccess, r'AuthState', 'isSuccess');
   }
 
   @override
@@ -38,13 +44,15 @@ class _$AuthState extends AuthState {
     return other is AuthState &&
         auth == other.auth &&
         isLoading == other.isLoading &&
-        error == other.error;
+        error == other.error &&
+        isSuccess == other.isSuccess;
   }
 
   @override
   int get hashCode {
-    return $jf(
-        $jc($jc($jc(0, auth.hashCode), isLoading.hashCode), error.hashCode));
+    return $jf($jc(
+        $jc($jc($jc(0, auth.hashCode), isLoading.hashCode), error.hashCode),
+        isSuccess.hashCode));
   }
 
   @override
@@ -52,7 +60,8 @@ class _$AuthState extends AuthState {
     return (newBuiltValueToStringHelper(r'AuthState')
           ..add('auth', auth)
           ..add('isLoading', isLoading)
-          ..add('error', error))
+          ..add('error', error)
+          ..add('isSuccess', isSuccess))
         .toString();
   }
 }
@@ -72,6 +81,10 @@ class AuthStateBuilder implements Builder<AuthState, AuthStateBuilder> {
   String? get error => _$this._error;
   set error(String? error) => _$this._error = error;
 
+  SuccessState? _isSuccess;
+  SuccessState? get isSuccess => _$this._isSuccess;
+  set isSuccess(SuccessState? isSuccess) => _$this._isSuccess = isSuccess;
+
   AuthStateBuilder();
 
   AuthStateBuilder get _$this {
@@ -80,6 +93,7 @@ class AuthStateBuilder implements Builder<AuthState, AuthStateBuilder> {
       _auth = $v.auth.toBuilder();
       _isLoading = $v.isLoading;
       _error = $v.error;
+      _isSuccess = $v.isSuccess;
       _$v = null;
     }
     return this;
@@ -108,7 +122,9 @@ class AuthStateBuilder implements Builder<AuthState, AuthStateBuilder> {
               isLoading: BuiltValueNullFieldError.checkNotNull(
                   isLoading, r'AuthState', 'isLoading'),
               error: BuiltValueNullFieldError.checkNotNull(
-                  error, r'AuthState', 'error'));
+                  error, r'AuthState', 'error'),
+              isSuccess: BuiltValueNullFieldError.checkNotNull(
+                  isSuccess, r'AuthState', 'isSuccess'));
     } catch (_) {
       late String _$failedField;
       try {

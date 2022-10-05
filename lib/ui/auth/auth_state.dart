@@ -5,10 +5,13 @@ import 'package:flutter_presensi_dsn/data/models/auth_local.dart';
 
 part 'auth_state.g.dart';
 
+enum SuccessState { initial, authNotFound, authFound }
+
 abstract class AuthState implements Built<AuthState, AuthStateBuilder> {
   AuthLocal get auth;
   bool get isLoading;
   String get error;
+  SuccessState get isSuccess;
 
   bool get isHasAuth =>
       auth.accessToken!.isNotEmpty &&
@@ -24,6 +27,7 @@ abstract class AuthState implements Built<AuthState, AuthStateBuilder> {
     return AuthState((b) => b
       ..isLoading = false
       ..error = ''
+      ..isSuccess = SuccessState.initial
       ..auth.replace(AuthLocal((b) => b
         ..accessToken = ''
         ..refreshToken = ''
@@ -35,6 +39,7 @@ abstract class AuthState implements Built<AuthState, AuthStateBuilder> {
     return AuthState((b) => b
       ..isLoading = true
       ..error = ''
+      ..isSuccess = SuccessState.initial
       ..auth.replace(AuthLocal((b) => b
         ..accessToken = ''
         ..refreshToken = ''
@@ -46,6 +51,7 @@ abstract class AuthState implements Built<AuthState, AuthStateBuilder> {
     return AuthState((b) => b
       ..isLoading = false
       ..error = ''
+      ..isSuccess = SuccessState.authFound
       ..auth.replace(auth));
   }
 
@@ -53,6 +59,7 @@ abstract class AuthState implements Built<AuthState, AuthStateBuilder> {
     return AuthState((b) => b
       ..isLoading = false
       ..error = ''
+      ..isSuccess = SuccessState.authNotFound
       ..auth.replace(AuthLocal((b) => b
         ..accessToken = ''
         ..refreshToken = ''

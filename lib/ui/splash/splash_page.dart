@@ -5,6 +5,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_presensi_dsn/constants.dart';
 import 'package:flutter_presensi_dsn/ui/auth/auth_bloc.dart';
 import 'package:flutter_presensi_dsn/ui/auth/auth_state.dart';
+import 'package:flutter_presensi_dsn/ui/home/home_page.dart';
+import 'package:flutter_presensi_dsn/ui/login/login_page.dart';
 import 'package:flutter_presensi_dsn/ui/splash/splash_bloc.dart';
 import 'package:flutter_presensi_dsn/ui/splash/splash_state.dart';
 import 'package:flutter_presensi_dsn/ui/welcome/welcome_page.dart';
@@ -47,10 +49,12 @@ class _SplashPageState extends State<SplashPage> {
       child: MultiBlocListener(
         listeners: [
           BlocListener<AuthBloc, AuthState>(listener: (context, state) {
-            if (state.isHasAuth) {
-              log('$runtimeType : ready to home page');
-            } else {
-              log('$runtimeType : ready to login page');
+            if (state.isHasAuth && state.isSuccess == SuccessState.authFound) {
+              Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(builder: (_) => const HomePage()));
+            } else if (state.isSuccess == SuccessState.authNotFound) {
+              Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(builder: (_) => const LoginPage()));
             }
           }),
           BlocListener<SplashBloc, SplashState>(listener: (context, state) {
