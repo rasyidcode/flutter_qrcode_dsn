@@ -7,14 +7,14 @@ part 'auth_state.g.dart';
 
 abstract class AuthState implements Built<AuthState, AuthStateBuilder> {
   AuthLocal get auth;
-  bool? get isLoading;
+  bool get isLoading;
   String get error;
-  String? get stateMessage;
 
-  bool? get isDoneGetAuth;
-  bool? get isDoneRenewToken;
-  bool? get isSuccessLogout;
-  bool? get isLoadingLogout;
+  bool get isHasAuth =>
+      auth.accessToken!.isNotEmpty &&
+      auth.id != 0 &&
+      auth.refreshToken!.isNotEmpty &&
+      auth.createdAt != 0;
 
   AuthState._();
 
@@ -31,16 +31,10 @@ abstract class AuthState implements Built<AuthState, AuthStateBuilder> {
         ..createdAt = 0)));
   }
 
-  factory AuthState.loading({
-    String? stateMessage,
-    bool? isLoading,
-    bool? isLoadingLogout,
-  }) {
+  factory AuthState.loading() {
     return AuthState((b) => b
-      ..isLoading = isLoading
+      ..isLoading = true
       ..error = ''
-      ..stateMessage = stateMessage
-      ..isLoadingLogout = isLoadingLogout
       ..auth.replace(AuthLocal((b) => b
         ..accessToken = ''
         ..refreshToken = ''
@@ -48,29 +42,16 @@ abstract class AuthState implements Built<AuthState, AuthStateBuilder> {
         ..createdAt = 0)));
   }
 
-  factory AuthState.success(AuthLocal auth,
-      {String? stateMessage,
-      bool? isDoneGetAuth,
-      bool? isDoneRenewToken,
-      bool? isSuccessLogout}) {
+  factory AuthState.success(AuthLocal auth) {
     return AuthState((b) => b
       ..isLoading = false
-      ..isLoadingLogout = false
       ..error = ''
-      ..stateMessage = stateMessage
-      ..isDoneGetAuth = isDoneGetAuth
-      ..isDoneRenewToken = isDoneRenewToken
-      ..isSuccessLogout = isSuccessLogout
       ..auth.replace(auth));
   }
 
-  factory AuthState.fail(String error,
-      {String? stateMessage, bool? isSuccessLogout}) {
+  factory AuthState.fail(String error) {
     return AuthState((b) => b
       ..isLoading = false
-      ..isLoadingLogout = false
-      ..stateMessage = stateMessage
-      ..isSuccessLogout = isSuccessLogout
       ..error = ''
       ..auth.replace(AuthLocal((b) => b
         ..accessToken = ''

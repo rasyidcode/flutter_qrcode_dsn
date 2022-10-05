@@ -1,4 +1,4 @@
-import 'dart:async';
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -20,7 +20,6 @@ class SplashPage extends StatefulWidget {
 class _SplashPageState extends State<SplashPage> {
   final AuthBloc _authBloc = KiwiContainer().resolve<AuthBloc>();
   final SplashBloc _splashBloc = KiwiContainer().resolve<SplashBloc>();
-
   @override
   void initState() {
     _splashBloc.checkFirstTime();
@@ -38,20 +37,29 @@ class _SplashPageState extends State<SplashPage> {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider<AuthBloc>(create: (_) => _authBloc),
-        BlocProvider<SplashBloc>(create: (_) => _splashBloc),
+        BlocProvider(
+          create: (_) => _authBloc,
+        ),
+        BlocProvider(
+          create: (_) => _splashBloc,
+        ),
       ],
       child: MultiBlocListener(
         listeners: [
-          BlocListener<AuthBloc, AuthState>(listener: (context, state) {}),
+          BlocListener<AuthBloc, AuthState>(listener: (context, state) {
+            if (state.isHasAuth) {
+              log('$runtimeType : ready to home page');
+            } else {
+              log('$runtimeType : ready to login page');
+            }
+          }),
           BlocListener<SplashBloc, SplashState>(listener: (context, state) {
             bool? isFirstTime = state.isFirstTime;
             if (isFirstTime != null) {
               if (isFirstTime) {
-                Timer(const Duration(seconds: 2), () {
-                  Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(builder: (_) => const WelcomePage()));
-                });
+                log('$runtimeType : ready to welcome page');
+                Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(builder: (_) => const WelcomePage()));
               } else {
                 BlocProvider.of<AuthBloc>(context).getAuth();
               }
@@ -70,18 +78,19 @@ class _SplashPageState extends State<SplashPage> {
                   padding: const EdgeInsets.only(left: 20.0),
                   child: Image.asset('assets/logo_dsn.png'),
                 ),
-                Column(
-                  children: const [
-                    SizedBox(height: 20.0),
-                    CircularProgressIndicator(
-                      color: kPrimaryButtonColor,
-                    ),
-                    SizedBox(height: 20.0),
-                    Text(
-                      'Loading...',
-                      style: TextStyle(color: Colors.white),
-                    )
-                  ],
+                const SizedBox(height: 20.0),
+                BlocBuilder<AuthBloc, AuthState>(
+                  builder: (context, authstate) {
+                    return BlocBuilder<SplashBloc, SplashState>(
+                      builder: (context, splashstate) {
+                        return authstate.isLoading || splashstate.isLoading
+                            ? const CircularProgressIndicator(
+                                color: kPrimaryButtonColor,
+                              )
+                            : Container();
+                      },
+                    );
+                  },
                 )
               ],
             ),

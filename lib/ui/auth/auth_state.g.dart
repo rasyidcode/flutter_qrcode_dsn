@@ -10,34 +10,18 @@ class _$AuthState extends AuthState {
   @override
   final AuthLocal auth;
   @override
-  final bool? isLoading;
+  final bool isLoading;
   @override
   final String error;
-  @override
-  final String? stateMessage;
-  @override
-  final bool? isDoneGetAuth;
-  @override
-  final bool? isDoneRenewToken;
-  @override
-  final bool? isSuccessLogout;
-  @override
-  final bool? isLoadingLogout;
 
   factory _$AuthState([void Function(AuthStateBuilder)? updates]) =>
       (new AuthStateBuilder()..update(updates))._build();
 
   _$AuthState._(
-      {required this.auth,
-      this.isLoading,
-      required this.error,
-      this.stateMessage,
-      this.isDoneGetAuth,
-      this.isDoneRenewToken,
-      this.isSuccessLogout,
-      this.isLoadingLogout})
+      {required this.auth, required this.isLoading, required this.error})
       : super._() {
     BuiltValueNullFieldError.checkNotNull(auth, r'AuthState', 'auth');
+    BuiltValueNullFieldError.checkNotNull(isLoading, r'AuthState', 'isLoading');
     BuiltValueNullFieldError.checkNotNull(error, r'AuthState', 'error');
   }
 
@@ -54,28 +38,13 @@ class _$AuthState extends AuthState {
     return other is AuthState &&
         auth == other.auth &&
         isLoading == other.isLoading &&
-        error == other.error &&
-        stateMessage == other.stateMessage &&
-        isDoneGetAuth == other.isDoneGetAuth &&
-        isDoneRenewToken == other.isDoneRenewToken &&
-        isSuccessLogout == other.isSuccessLogout &&
-        isLoadingLogout == other.isLoadingLogout;
+        error == other.error;
   }
 
   @override
   int get hashCode {
-    return $jf($jc(
-        $jc(
-            $jc(
-                $jc(
-                    $jc(
-                        $jc($jc($jc(0, auth.hashCode), isLoading.hashCode),
-                            error.hashCode),
-                        stateMessage.hashCode),
-                    isDoneGetAuth.hashCode),
-                isDoneRenewToken.hashCode),
-            isSuccessLogout.hashCode),
-        isLoadingLogout.hashCode));
+    return $jf(
+        $jc($jc($jc(0, auth.hashCode), isLoading.hashCode), error.hashCode));
   }
 
   @override
@@ -83,12 +52,7 @@ class _$AuthState extends AuthState {
     return (newBuiltValueToStringHelper(r'AuthState')
           ..add('auth', auth)
           ..add('isLoading', isLoading)
-          ..add('error', error)
-          ..add('stateMessage', stateMessage)
-          ..add('isDoneGetAuth', isDoneGetAuth)
-          ..add('isDoneRenewToken', isDoneRenewToken)
-          ..add('isSuccessLogout', isSuccessLogout)
-          ..add('isLoadingLogout', isLoadingLogout))
+          ..add('error', error))
         .toString();
   }
 }
@@ -108,30 +72,6 @@ class AuthStateBuilder implements Builder<AuthState, AuthStateBuilder> {
   String? get error => _$this._error;
   set error(String? error) => _$this._error = error;
 
-  String? _stateMessage;
-  String? get stateMessage => _$this._stateMessage;
-  set stateMessage(String? stateMessage) => _$this._stateMessage = stateMessage;
-
-  bool? _isDoneGetAuth;
-  bool? get isDoneGetAuth => _$this._isDoneGetAuth;
-  set isDoneGetAuth(bool? isDoneGetAuth) =>
-      _$this._isDoneGetAuth = isDoneGetAuth;
-
-  bool? _isDoneRenewToken;
-  bool? get isDoneRenewToken => _$this._isDoneRenewToken;
-  set isDoneRenewToken(bool? isDoneRenewToken) =>
-      _$this._isDoneRenewToken = isDoneRenewToken;
-
-  bool? _isSuccessLogout;
-  bool? get isSuccessLogout => _$this._isSuccessLogout;
-  set isSuccessLogout(bool? isSuccessLogout) =>
-      _$this._isSuccessLogout = isSuccessLogout;
-
-  bool? _isLoadingLogout;
-  bool? get isLoadingLogout => _$this._isLoadingLogout;
-  set isLoadingLogout(bool? isLoadingLogout) =>
-      _$this._isLoadingLogout = isLoadingLogout;
-
   AuthStateBuilder();
 
   AuthStateBuilder get _$this {
@@ -140,11 +80,6 @@ class AuthStateBuilder implements Builder<AuthState, AuthStateBuilder> {
       _auth = $v.auth.toBuilder();
       _isLoading = $v.isLoading;
       _error = $v.error;
-      _stateMessage = $v.stateMessage;
-      _isDoneGetAuth = $v.isDoneGetAuth;
-      _isDoneRenewToken = $v.isDoneRenewToken;
-      _isSuccessLogout = $v.isSuccessLogout;
-      _isLoadingLogout = $v.isLoadingLogout;
       _$v = null;
     }
     return this;
@@ -170,14 +105,10 @@ class AuthStateBuilder implements Builder<AuthState, AuthStateBuilder> {
       _$result = _$v ??
           new _$AuthState._(
               auth: auth.build(),
-              isLoading: isLoading,
+              isLoading: BuiltValueNullFieldError.checkNotNull(
+                  isLoading, r'AuthState', 'isLoading'),
               error: BuiltValueNullFieldError.checkNotNull(
-                  error, r'AuthState', 'error'),
-              stateMessage: stateMessage,
-              isDoneGetAuth: isDoneGetAuth,
-              isDoneRenewToken: isDoneRenewToken,
-              isSuccessLogout: isSuccessLogout,
-              isLoadingLogout: isLoadingLogout);
+                  error, r'AuthState', 'error'));
     } catch (_) {
       late String _$failedField;
       try {

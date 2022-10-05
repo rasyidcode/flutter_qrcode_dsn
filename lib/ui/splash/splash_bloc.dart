@@ -9,15 +9,19 @@ class SplashBloc extends Bloc<SplashEvent, SplashState> {
 
   SplashBloc(this._appRepository) : super(SplashState.initial()) {
     on<CheckFirstTime>((event, emit) async {
-      emit(SplashState.loading('Checking first time login...'));
+      emit(SplashState.loading());
+
+      await Future.delayed(const Duration(seconds: 2));
 
       try {
         bool isFirstTime = await _appRepository.checkFirstTime();
-        emit(SplashState.success(
-            isFirstTime ? 'This is your first time' : 'Not your first time',
-            isFirstTime: isFirstTime));
-      } on ProviderErrorException catch (e) {
-        emit(SplashState.fail(e.message, isFirstTime: true));
+        if (isFirstTime) {
+          emit(SplashState.firstTime());
+        } else {
+          emit(SplashState.notFirstTime());
+        }
+      } on ProviderErrorException catch (_) {
+        emit(SplashState.firstTime());
       } on Exception catch (_) {
         emit(SplashState.fail('Something went wrong'));
       }

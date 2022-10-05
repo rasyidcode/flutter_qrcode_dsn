@@ -26,12 +26,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   AuthBloc(this._authRepository) : super(AuthState.initial()) {
     on<GetAuth>((event, emit) async {
-      emit(AuthState.loading(stateMessage: 'Getting auth...', isLoading: true));
+      emit(AuthState.loading());
 
       try {
         final auth = await _authRepository.getAuth();
-        emit(AuthState.success(auth,
-            stateMessage: 'Auth exist', isDoneGetAuth: true));
+        emit(AuthState.success(auth));
       } on ProviderErrorException catch (e) {
         emit(AuthState.fail(e.message));
       } on Exception catch (_) {
@@ -39,11 +38,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       }
     });
     on<RenewToken>((event, emit) async {
-      emit(AuthState.loading(isLoading: true));
+      emit(AuthState.loading());
 
       try {
         final auth = await _authRepository.renewToken(event.auth);
-        emit(AuthState.success(auth, isDoneRenewToken: true));
+        emit(AuthState.success(auth));
       } on ApiAccessErrorException catch (e) {
         emit(AuthState.fail(e.message));
       } on RepositoryErrorException catch (e) {
@@ -53,17 +52,17 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       }
     });
     on<Logout>((event, emit) async {
-      emit(AuthState.loading(isLoading: true, isLoadingLogout: true));
+      emit(AuthState.loading());
 
       try {
         await _authRepository.logout(event.accessToken, event.refreshToken);
-        emit(AuthState.success(state.auth, isSuccessLogout: true));
+        emit(AuthState.success(state.auth));
       } on ApiAccessErrorException catch (e) {
-        emit(AuthState.fail(e.message, isSuccessLogout: false));
+        emit(AuthState.fail(e.message));
       } on RepositoryErrorException catch (e) {
-        emit(AuthState.fail(e.message, isSuccessLogout: false));
+        emit(AuthState.fail(e.message));
       } on Exception catch (_) {
-        emit(AuthState.fail('Something went wrong', isSuccessLogout: false));
+        emit(AuthState.fail('Something went wrong'));
       }
     });
   }

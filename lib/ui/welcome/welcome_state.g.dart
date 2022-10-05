@@ -1,64 +1,67 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of splash_state;
+part of welcome_state;
 
 // **************************************************************************
 // BuiltValueGenerator
 // **************************************************************************
 
-class _$SplashState extends SplashState {
+class _$WelcomeState extends WelcomeState {
   @override
   final bool isLoading;
   @override
   final String error;
   @override
-  final bool? isFirstTime;
+  final bool isSuccess;
 
-  factory _$SplashState([void Function(SplashStateBuilder)? updates]) =>
-      (new SplashStateBuilder()..update(updates))._build();
+  factory _$WelcomeState([void Function(WelcomeStateBuilder)? updates]) =>
+      (new WelcomeStateBuilder()..update(updates))._build();
 
-  _$SplashState._(
-      {required this.isLoading, required this.error, this.isFirstTime})
+  _$WelcomeState._(
+      {required this.isLoading, required this.error, required this.isSuccess})
       : super._() {
     BuiltValueNullFieldError.checkNotNull(
-        isLoading, r'SplashState', 'isLoading');
-    BuiltValueNullFieldError.checkNotNull(error, r'SplashState', 'error');
+        isLoading, r'WelcomeState', 'isLoading');
+    BuiltValueNullFieldError.checkNotNull(error, r'WelcomeState', 'error');
+    BuiltValueNullFieldError.checkNotNull(
+        isSuccess, r'WelcomeState', 'isSuccess');
   }
 
   @override
-  SplashState rebuild(void Function(SplashStateBuilder) updates) =>
+  WelcomeState rebuild(void Function(WelcomeStateBuilder) updates) =>
       (toBuilder()..update(updates)).build();
 
   @override
-  SplashStateBuilder toBuilder() => new SplashStateBuilder()..replace(this);
+  WelcomeStateBuilder toBuilder() => new WelcomeStateBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
     if (identical(other, this)) return true;
-    return other is SplashState &&
+    return other is WelcomeState &&
         isLoading == other.isLoading &&
         error == other.error &&
-        isFirstTime == other.isFirstTime;
+        isSuccess == other.isSuccess;
   }
 
   @override
   int get hashCode {
     return $jf($jc(
-        $jc($jc(0, isLoading.hashCode), error.hashCode), isFirstTime.hashCode));
+        $jc($jc(0, isLoading.hashCode), error.hashCode), isSuccess.hashCode));
   }
 
   @override
   String toString() {
-    return (newBuiltValueToStringHelper(r'SplashState')
+    return (newBuiltValueToStringHelper(r'WelcomeState')
           ..add('isLoading', isLoading)
           ..add('error', error)
-          ..add('isFirstTime', isFirstTime))
+          ..add('isSuccess', isSuccess))
         .toString();
   }
 }
 
-class SplashStateBuilder implements Builder<SplashState, SplashStateBuilder> {
-  _$SplashState? _$v;
+class WelcomeStateBuilder
+    implements Builder<WelcomeState, WelcomeStateBuilder> {
+  _$WelcomeState? _$v;
 
   bool? _isLoading;
   bool? get isLoading => _$this._isLoading;
@@ -68,45 +71,46 @@ class SplashStateBuilder implements Builder<SplashState, SplashStateBuilder> {
   String? get error => _$this._error;
   set error(String? error) => _$this._error = error;
 
-  bool? _isFirstTime;
-  bool? get isFirstTime => _$this._isFirstTime;
-  set isFirstTime(bool? isFirstTime) => _$this._isFirstTime = isFirstTime;
+  bool? _isSuccess;
+  bool? get isSuccess => _$this._isSuccess;
+  set isSuccess(bool? isSuccess) => _$this._isSuccess = isSuccess;
 
-  SplashStateBuilder();
+  WelcomeStateBuilder();
 
-  SplashStateBuilder get _$this {
+  WelcomeStateBuilder get _$this {
     final $v = _$v;
     if ($v != null) {
       _isLoading = $v.isLoading;
       _error = $v.error;
-      _isFirstTime = $v.isFirstTime;
+      _isSuccess = $v.isSuccess;
       _$v = null;
     }
     return this;
   }
 
   @override
-  void replace(SplashState other) {
+  void replace(WelcomeState other) {
     ArgumentError.checkNotNull(other, 'other');
-    _$v = other as _$SplashState;
+    _$v = other as _$WelcomeState;
   }
 
   @override
-  void update(void Function(SplashStateBuilder)? updates) {
+  void update(void Function(WelcomeStateBuilder)? updates) {
     if (updates != null) updates(this);
   }
 
   @override
-  SplashState build() => _build();
+  WelcomeState build() => _build();
 
-  _$SplashState _build() {
+  _$WelcomeState _build() {
     final _$result = _$v ??
-        new _$SplashState._(
+        new _$WelcomeState._(
             isLoading: BuiltValueNullFieldError.checkNotNull(
-                isLoading, r'SplashState', 'isLoading'),
+                isLoading, r'WelcomeState', 'isLoading'),
             error: BuiltValueNullFieldError.checkNotNull(
-                error, r'SplashState', 'error'),
-            isFirstTime: isFirstTime);
+                error, r'WelcomeState', 'error'),
+            isSuccess: BuiltValueNullFieldError.checkNotNull(
+                isSuccess, r'WelcomeState', 'isSuccess'));
     replace(_$result);
     return _$result;
   }
