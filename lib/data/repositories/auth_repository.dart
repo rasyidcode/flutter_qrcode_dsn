@@ -54,7 +54,7 @@ class AuthRepository {
     }
 
     var updatedAuth = auth.rebuild((p0) => p0..accessToken = accessToken);
-    await (_baseProvider as AuthProvider).updateToken(auth);
+    await (_baseProvider as AuthProvider).updateToken(updatedAuth);
 
     return updatedAuth;
   }

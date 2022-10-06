@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter_presensi_dsn/data/db/presensi_app_db.dart';
 import 'package:flutter_presensi_dsn/data/execptions/provider_error_exception.dart';
 import 'package:flutter_presensi_dsn/data/models/auth_local.dart';
@@ -9,7 +11,9 @@ class AuthProvider extends BaseProvider {
   AuthProvider(this._presensiAppDb);
 
   Future<void> updateToken(AuthLocal auth) async {
-    await (await _presensiAppDb.db)?.update('auth', auth.toMap());
+    var result = await (await _presensiAppDb.db)
+        ?.update('auth', auth.toMap(), where: 'id = ?', whereArgs: [auth.id]);
+    log('$runtimeType : update result : $result');
   }
 
   Future<void> removeAuth() async {

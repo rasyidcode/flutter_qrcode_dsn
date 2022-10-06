@@ -2,7 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_presensi_dsn/constants.dart';
 
 class PerkuliahanTime extends StatelessWidget {
-  const PerkuliahanTime({Key? key}) : super(key: key);
+  final String beginTime;
+  final String endTime;
+  const PerkuliahanTime(
+      {required this.beginTime, required this.endTime, Key? key})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -40,18 +44,18 @@ class PerkuliahanTime extends StatelessWidget {
             ),
             const SizedBox(width: 16.0),
             RichText(
-              text: const TextSpan(
+              text: TextSpan(
                 children: [
                   TextSpan(
-                    text: '12:00\n',
-                    style: TextStyle(
+                    text: '$beginTime\n',
+                    style: const TextStyle(
                       fontWeight: FontWeight.w400,
                       fontSize: 12.0,
                     ),
                   ),
                   TextSpan(
-                    text: '13:00',
-                    style: TextStyle(
+                    text: endTime,
+                    style: const TextStyle(
                       fontWeight: FontWeight.w400,
                       fontSize: 12.0,
                     ),

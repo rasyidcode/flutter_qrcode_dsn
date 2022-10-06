@@ -1,13 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_presensi_dsn/constants.dart';
+import 'package:flutter_presensi_dsn/data/models/perkuliahan_item.dart';
+import 'package:flutter_presensi_dsn/ui/auth/auth_bloc.dart';
+import 'package:flutter_presensi_dsn/ui/auth/auth_state.dart';
+import 'package:flutter_presensi_dsn/ui/home/home_bloc.dart';
 import 'package:flutter_presensi_dsn/ui/home/widgets/card_title.dart';
 import 'package:flutter_presensi_dsn/ui/home/widgets/mahasiswa_item.dart';
 import 'package:flutter_presensi_dsn/ui/home/widgets/perkuliahan_time.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
 class CardItem extends StatelessWidget {
-  final bool hideQR;
-  const CardItem({required this.hideQR, Key? key}) : super(key: key);
+  final PerkuliahanItem perkuliahanItem;
+  const CardItem({required this.perkuliahanItem, Key? key}) : super(key: key);
+
+  String getQrData() => 'PRESENSI_SECRET_${perkuliahanItem.idJadwal}';
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +44,7 @@ class CardItem extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       // CARD TITLE
-                      const CardTitle(title: 'Pengenalan Pemrograman'),
+                      CardTitle(title: perkuliahanItem.namaMatkul),
                       const SizedBox(height: 4.0),
                       // CARD SUBTITLE
                       Padding(
@@ -54,10 +61,69 @@ class CardItem extends StatelessWidget {
                       ),
                       const SizedBox(height: 8.0),
                       // CARD BODY
-                      const PerkuliahanTime(),
-                      const SizedBox(height: 16.0),
-                      !hideQR
-                          ? Column(
+                      if (perkuliahanItem.statusPerkuliahan == 'done')
+                        const Center(
+                          child: Text(
+                            'Detail Perkuliahan',
+                            style: TextStyle(
+                                decoration: TextDecoration.underline,
+                                color: kButtonColor2),
+                          ),
+                        )
+                      else if (perkuliahanItem.statusPerkuliahan ==
+                          'not_started')
+                        BlocBuilder<AuthBloc, AuthState>(
+                          builder: (context, state) {
+                            return Container(
+                              width: double.infinity,
+                              alignment: Alignment.center,
+                              child: MaterialButton(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 30.0,
+                                ),
+                                onPressed: () {
+                                  String? accessToken = state.auth.accessToken;
+                                  if (accessToken != null &&
+                                      accessToken.isNotEmpty) {
+                                    BlocProvider.of<HomeBloc>(context).postQR(
+                                        accessToken,
+                                        int.parse(perkuliahanItem.idJadwal),
+                                        getQrData());
+                                  } else {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                        const SnackBar(
+                                            content:
+                                                Text('Access token is empty')));
+                                  }
+                                },
+                                minWidth: 0.0,
+                                materialTapTargetSize:
+                                    MaterialTapTargetSize.shrinkWrap,
+                                color: kButtonColor2,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20.0),
+                                ),
+                                child: const Text(
+                                  'Buat QR',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 12.0,
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
+                        )
+                      else if (perkuliahanItem.statusPerkuliahan == 'ongoing')
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            PerkuliahanTime(
+                              beginTime: perkuliahanItem.beginTime,
+                              endTime: perkuliahanItem.endTime,
+                            ),
+                            const SizedBox(height: 16.0),
+                            Column(
                               children: [
                                 Align(
                                   alignment: Alignment.center,
@@ -69,11 +135,9 @@ class CardItem extends StatelessWidget {
                                 ),
                                 const SizedBox(height: 16.0),
                               ],
-                            )
-                          : Container(),
-                      // MAHASISWA LIST
-                      !hideQR
-                          ? Column(
+                            ),
+                            // MAHASISWA LIST
+                            Column(
                               children: [
                                 const CardTitle(title: 'Daftar Mahasiswa'),
                                 const SizedBox(height: 4.0),
@@ -86,34 +150,9 @@ class CardItem extends StatelessWidget {
                                     }),
                                 const SizedBox(height: 16.0),
                               ],
-                            )
-                          : Container(),
-                      Container(
-                        width: double.infinity,
-                        alignment: Alignment.center,
-                        child: MaterialButton(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 30.0,
-                          ),
-                          onPressed: () {},
-                          minWidth: 0.0,
-                          materialTapTargetSize:
-                              MaterialTapTargetSize.shrinkWrap,
-                          color: kButtonColor2,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20.0),
-                          ),
-                          child: const Text(
-                            'Buat QR',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 12.0,
                             ),
-                          ),
-                        ),
-                      ),
-                      !hideQR
-                          ? Container(
+
+                            Container(
                               width: double.infinity,
                               alignment: Alignment.center,
                               child: MaterialButton(
@@ -137,7 +176,12 @@ class CardItem extends StatelessWidget {
                                 ),
                               ),
                             )
-                          : Container()
+                          ],
+                        )
+                      else
+                        const Center(
+                          child: Text('Undefined status_perkuliahan'),
+                        )
                     ],
                   ),
                 ),

@@ -24,4 +24,13 @@ class PerkuliahanRepository {
 
     return perkuliahanList;
   }
+
+  Future<void> postQR(String accessToken, int idJadwal, String qrCode) async {
+    final result = await _presensiAppBackendApi.postQR(
+        accessToken: accessToken, qrcode: qrCode, idJadwal: idJadwal);
+
+    if (result == null) {
+      throw RepositoryErrorException('Message returns null');
+    }
+  }
 }

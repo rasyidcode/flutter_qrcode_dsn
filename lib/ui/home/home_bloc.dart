@@ -15,33 +15,77 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     add(GetListMatkul((b) => b..accessToken = accessToken));
   }
 
+  void postQR(String accessToken, int idJadwal, String qrCode) {
+    add(PostQR((b) => b
+      ..accessToken = accessToken
+      ..idJadwal = idJadwal
+      ..qrCode = qrCode));
+  }
+
   HomeBloc(this._perkuliahanRepository) : super(HomeState.initial()) {
     on<GetListMatkul>((event, emit) async {
-      emit(HomeState.loading());
+      emit(HomeState.loading(type: HomeStateLoadingType.getList));
 
       await Future.delayed(const Duration(seconds: 2));
 
       try {
         final result =
             await _perkuliahanRepository.getPerkuliahanList(event.accessToken);
-        log('$runtimeType : success => $result');
-        emit(HomeState.success(result));
+        emit(HomeState.success(
+          result,
+          type: HomeStateSuccessType.getList,
+        ));
       } on ApiAccessErrorException catch (e) {
-        log('$runtimeType : ApiAccessErrorException => ${e.message}');
-        emit(HomeState.error(e.message));
+        emit(HomeState.error(
+          e.message,
+          type: HomeStateErrorType.apiError,
+        ));
       } on ApiExpiredTokenExecption catch (e) {
-        log('$runtimeType : ApiExpiredTokenExecption => ${e.message}');
-        emit(HomeState.error(e.message, type: HomeStateErrorType.expiredToken));
+        emit(HomeState.error(
+          e.message,
+          type: HomeStateErrorType.expiredToken,
+        ));
       } on RepositoryErrorException catch (e) {
-        log('$runtimeType : RepositoryErrorException => ${e.message}');
-        emit(HomeState.error(e.message, type: HomeStateErrorType.empty));
+        emit(HomeState.error(
+          e.message,
+          type: HomeStateErrorType.listEmpty,
+        ));
       } on Exception catch (_) {
-        log('$runtimeType : something went wrong');
-        emit(HomeState.error('Something went wrong'));
+        emit(HomeState.error('Something went wrong',
+            type: HomeStateErrorType.unknownError));
       }
     });
     on<PostQR>((event, emit) async {
-      // TODO: implement event handler
+      emit(HomeState.loading(type: HomeStateLoadingType.postQr));
+
+      try {
+        await _perkuliahanRepository.postQR(
+            event.accessToken, event.idJadwal, event.qrCode);
+        emit(HomeState.success(
+          state.data,
+          type: HomeStateSuccessType.postQr,
+        ));
+      } on ApiAccessErrorException catch (e) {
+        emit(HomeState.error(
+          e.message,
+          type: HomeStateErrorType.apiError,
+        ));
+      } on ApiExpiredTokenExecption catch (e) {
+        emit(HomeState.error(
+          e.message,
+          type: HomeStateErrorType.expiredToken,
+        ));
+      } on RepositoryErrorException catch (e) {
+        emit(HomeState.error(
+          e.message,
+          type: HomeStateErrorType.responseFormatError,
+        ));
+      } on Exception catch (_) {
+        emit(HomeState.error(
+          'Something went wrong',
+          type: HomeStateErrorType.unknownError,
+        ));
+      }
     });
     on<SubmitPerkuliahan>((event, emit) async {
       // TODO: implement event handler

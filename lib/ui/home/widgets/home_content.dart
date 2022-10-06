@@ -1,6 +1,15 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_presensi_dsn/constants.dart';
+import 'package:flutter_presensi_dsn/extensions/string_extensions.dart';
+import 'package:flutter_presensi_dsn/ui/auth/auth_bloc.dart';
+import 'package:flutter_presensi_dsn/ui/auth/auth_state.dart';
+import 'package:flutter_presensi_dsn/ui/home/home_bloc.dart';
+import 'package:flutter_presensi_dsn/ui/home/home_state.dart';
 import 'package:flutter_presensi_dsn/ui/home/widgets/card_item.dart';
+import 'package:flutter_presensi_dsn/extensions/date_time_extensions.dart';
 
 class HomeContent extends StatefulWidget {
   const HomeContent({Key? key}) : super(key: key);
@@ -12,6 +21,11 @@ class HomeContent extends StatefulWidget {
 class _HomeContentState extends State<HomeContent> {
   bool isLoading = false;
   bool isStarted = false;
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,25 +40,42 @@ class _HomeContentState extends State<HomeContent> {
               color: kPrimaryColor,
               child: Padding(
                 padding: const EdgeInsets.all(12.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Halo, Bpk John Doe!',
-                      style: Theme.of(context).textTheme.headline5?.copyWith(
-                            color: Colors.white,
-                          ),
-                    ),
-                    const SizedBox(height: 6.0),
-                    Text(
-                      '2014.17.0001.2202',
-                      style: Theme.of(context).textTheme.bodyText1?.copyWith(
-                            color: Colors.white,
-                          ),
-                    ),
-                    const SizedBox(height: 20.0),
-                  ],
-                ),
+                child:
+                    BlocBuilder<AuthBloc, AuthState>(builder: (context, state) {
+                  String? accessToken = state.auth.accessToken;
+                  if (accessToken == null || accessToken.isEmpty) {
+                    return const Padding(
+                      padding: EdgeInsets.only(bottom: 8.0),
+                      child: Center(
+                        child: CircularProgressIndicator(
+                          color: kPrimaryButtonColor,
+                        ),
+                      ),
+                    );
+                  }
+
+                  var data = accessToken.jwtDecode()['data'];
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      Text(
+                        'Halo, ${data['name']}',
+                        style: Theme.of(context).textTheme.headline5?.copyWith(
+                              color: Colors.white,
+                            ),
+                      ),
+                      const SizedBox(height: 6.0),
+                      Text(
+                        data['username'],
+                        style: Theme.of(context).textTheme.bodyText1?.copyWith(
+                              color: Colors.white,
+                            ),
+                      ),
+                      const SizedBox(height: 20.0),
+                    ],
+                  );
+                }),
               ),
             ),
             Positioned(
@@ -57,7 +88,7 @@ class _HomeContentState extends State<HomeContent> {
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
-                    'Sabtu, 20 Agustus 2022',
+                    DateTime.now().toCustomDateFormat(),
                     style: Theme.of(context).textTheme.bodyText1?.copyWith(
                           color: Colors.black87,
                           fontWeight: FontWeight.bold,
@@ -72,11 +103,32 @@ class _HomeContentState extends State<HomeContent> {
         Expanded(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8.0),
-            child: ListView.builder(
-                itemCount: 5,
-                itemBuilder: (context, index) {
-                  return const CardItem(hideQR: true);
-                }),
+            child: BlocBuilder<HomeBloc, HomeState>(
+              builder: (context, state) {
+                if (state.isLoading &&
+                    state.loadingType == HomeStateLoadingType.getList) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+
+                if (state.error.isNotEmpty) {
+                  if (state.errorType == HomeStateErrorType.listEmpty) {
+                    return const Center(
+                        child: Text('Tidak ada perkuliahan hari ini'));
+                  }
+                }
+
+                if (state.isSuccess) {
+                  return ListView.builder(
+                    itemCount: state.data.total,
+                    itemBuilder: (context, index) {
+                      return CardItem(perkuliahanItem: state.data.data[index]);
+                    },
+                  );
+                }
+
+                return const Center(child: Text('unknown state'));
+              },
+            ),
           ),
         )
       ],
