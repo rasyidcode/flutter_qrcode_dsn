@@ -2,8 +2,10 @@ library perkuliahan_item;
 
 import 'dart:convert';
 
+import 'package:built_collection/built_collection.dart';
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
+import 'package:flutter_presensi_dsn/data/models/mahasiswa_item.dart';
 import 'package:flutter_presensi_dsn/data/models/serializers.dart';
 
 part 'perkuliahan_item.g.dart';
@@ -24,6 +26,10 @@ abstract class PerkuliahanItem
   String get endTime;
   @BuiltValueField(wireName: 'status_perkuliahan')
   String get statusPerkuliahan;
+  @BuiltValueField(wireName: 'qr_secret')
+  String? get qrsecret;
+  @BuiltValueField(wireName: 'mahasiswa')
+  BuiltList<MahasiswaItem> get mahasiswa;
 
   PerkuliahanItem._();
 

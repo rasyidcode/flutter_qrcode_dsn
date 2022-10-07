@@ -68,6 +68,7 @@ class PresensiAppBackendApi {
         await _client.get(Uri.parse('$baseApiURL/dosen/perkuliahan'), headers: {
       HttpHeaders.authorizationHeader: 'Bearer $accessToken',
     });
+
     if (response.statusCode != 200) {
       if (response.statusCode == 401) {
         String? decoded = jsonDecode(response.body)['message'];
@@ -91,7 +92,7 @@ class PresensiAppBackendApi {
       {required String accessToken, required int idJadwal}) async {
     final response = await _client
         .get(Uri.parse('$baseApiURL/dosen/perkuliahan/$idJadwal'), headers: {
-      HttpHeaders.authorizationHeader: accessToken,
+      HttpHeaders.authorizationHeader: 'Bearer $accessToken',
     });
     if (response.statusCode != 200) {
       if (response.statusCode == 401) {
@@ -118,11 +119,13 @@ class PresensiAppBackendApi {
       required int idJadwal}) async {
     final response =
         await _client.post(Uri.parse('$baseApiURL/dosen/post-qr'), headers: {
-      HttpHeaders.authorizationHeader: accessToken,
+      HttpHeaders.authorizationHeader: 'Bearer $accessToken',
     }, body: {
       'qr_secret': qrcode,
-      'id_jadwal': idJadwal
+      'id_jadwal': idJadwal.toString()
     });
+
+    log('$runtimeType : ${response.body}');
 
     if (response.statusCode != 200) {
       if (response.statusCode == 401) {

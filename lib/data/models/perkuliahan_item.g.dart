@@ -41,8 +41,19 @@ class _$PerkuliahanItemSerializer
       'status_perkuliahan',
       serializers.serialize(object.statusPerkuliahan,
           specifiedType: const FullType(String)),
+      'mahasiswa',
+      serializers.serialize(object.mahasiswa,
+          specifiedType:
+              const FullType(BuiltList, const [const FullType(MahasiswaItem)])),
     ];
-
+    Object? value;
+    value = object.qrsecret;
+    if (value != null) {
+      result
+        ..add('qr_secret')
+        ..add(serializers.serialize(value,
+            specifiedType: const FullType(String)));
+    }
     return result;
   }
 
@@ -86,6 +97,16 @@ class _$PerkuliahanItemSerializer
           result.statusPerkuliahan = serializers.deserialize(value,
               specifiedType: const FullType(String))! as String;
           break;
+        case 'qr_secret':
+          result.qrsecret = serializers.deserialize(value,
+              specifiedType: const FullType(String)) as String?;
+          break;
+        case 'mahasiswa':
+          result.mahasiswa.replace(serializers.deserialize(value,
+                  specifiedType: const FullType(
+                      BuiltList, const [const FullType(MahasiswaItem)]))!
+              as BuiltList<Object?>);
+          break;
       }
     }
 
@@ -108,6 +129,10 @@ class _$PerkuliahanItem extends PerkuliahanItem {
   final String endTime;
   @override
   final String statusPerkuliahan;
+  @override
+  final String? qrsecret;
+  @override
+  final BuiltList<MahasiswaItem> mahasiswa;
 
   factory _$PerkuliahanItem([void Function(PerkuliahanItemBuilder)? updates]) =>
       (new PerkuliahanItemBuilder()..update(updates))._build();
@@ -119,7 +144,9 @@ class _$PerkuliahanItem extends PerkuliahanItem {
       required this.namaMatkul,
       required this.beginTime,
       required this.endTime,
-      required this.statusPerkuliahan})
+      required this.statusPerkuliahan,
+      this.qrsecret,
+      required this.mahasiswa})
       : super._() {
     BuiltValueNullFieldError.checkNotNull(
         idJadwal, r'PerkuliahanItem', 'idJadwal');
@@ -135,6 +162,8 @@ class _$PerkuliahanItem extends PerkuliahanItem {
         endTime, r'PerkuliahanItem', 'endTime');
     BuiltValueNullFieldError.checkNotNull(
         statusPerkuliahan, r'PerkuliahanItem', 'statusPerkuliahan');
+    BuiltValueNullFieldError.checkNotNull(
+        mahasiswa, r'PerkuliahanItem', 'mahasiswa');
   }
 
   @override
@@ -155,7 +184,9 @@ class _$PerkuliahanItem extends PerkuliahanItem {
         namaMatkul == other.namaMatkul &&
         beginTime == other.beginTime &&
         endTime == other.endTime &&
-        statusPerkuliahan == other.statusPerkuliahan;
+        statusPerkuliahan == other.statusPerkuliahan &&
+        qrsecret == other.qrsecret &&
+        mahasiswa == other.mahasiswa;
   }
 
   @override
@@ -164,12 +195,18 @@ class _$PerkuliahanItem extends PerkuliahanItem {
         $jc(
             $jc(
                 $jc(
-                    $jc($jc($jc(0, idJadwal.hashCode), tglJadwal.hashCode),
-                        kodeMatkul.hashCode),
-                    namaMatkul.hashCode),
-                beginTime.hashCode),
-            endTime.hashCode),
-        statusPerkuliahan.hashCode));
+                    $jc(
+                        $jc(
+                            $jc(
+                                $jc($jc(0, idJadwal.hashCode),
+                                    tglJadwal.hashCode),
+                                kodeMatkul.hashCode),
+                            namaMatkul.hashCode),
+                        beginTime.hashCode),
+                    endTime.hashCode),
+                statusPerkuliahan.hashCode),
+            qrsecret.hashCode),
+        mahasiswa.hashCode));
   }
 
   @override
@@ -181,7 +218,9 @@ class _$PerkuliahanItem extends PerkuliahanItem {
           ..add('namaMatkul', namaMatkul)
           ..add('beginTime', beginTime)
           ..add('endTime', endTime)
-          ..add('statusPerkuliahan', statusPerkuliahan))
+          ..add('statusPerkuliahan', statusPerkuliahan)
+          ..add('qrsecret', qrsecret)
+          ..add('mahasiswa', mahasiswa))
         .toString();
   }
 }
@@ -219,6 +258,16 @@ class PerkuliahanItemBuilder
   set statusPerkuliahan(String? statusPerkuliahan) =>
       _$this._statusPerkuliahan = statusPerkuliahan;
 
+  String? _qrsecret;
+  String? get qrsecret => _$this._qrsecret;
+  set qrsecret(String? qrsecret) => _$this._qrsecret = qrsecret;
+
+  ListBuilder<MahasiswaItem>? _mahasiswa;
+  ListBuilder<MahasiswaItem> get mahasiswa =>
+      _$this._mahasiswa ??= new ListBuilder<MahasiswaItem>();
+  set mahasiswa(ListBuilder<MahasiswaItem>? mahasiswa) =>
+      _$this._mahasiswa = mahasiswa;
+
   PerkuliahanItemBuilder();
 
   PerkuliahanItemBuilder get _$this {
@@ -231,6 +280,8 @@ class PerkuliahanItemBuilder
       _beginTime = $v.beginTime;
       _endTime = $v.endTime;
       _statusPerkuliahan = $v.statusPerkuliahan;
+      _qrsecret = $v.qrsecret;
+      _mahasiswa = $v.mahasiswa.toBuilder();
       _$v = null;
     }
     return this;
@@ -251,22 +302,37 @@ class PerkuliahanItemBuilder
   PerkuliahanItem build() => _build();
 
   _$PerkuliahanItem _build() {
-    final _$result = _$v ??
-        new _$PerkuliahanItem._(
-            idJadwal: BuiltValueNullFieldError.checkNotNull(
-                idJadwal, r'PerkuliahanItem', 'idJadwal'),
-            tglJadwal: BuiltValueNullFieldError.checkNotNull(
-                tglJadwal, r'PerkuliahanItem', 'tglJadwal'),
-            kodeMatkul: BuiltValueNullFieldError.checkNotNull(
-                kodeMatkul, r'PerkuliahanItem', 'kodeMatkul'),
-            namaMatkul: BuiltValueNullFieldError.checkNotNull(
-                namaMatkul, r'PerkuliahanItem', 'namaMatkul'),
-            beginTime: BuiltValueNullFieldError.checkNotNull(
-                beginTime, r'PerkuliahanItem', 'beginTime'),
-            endTime: BuiltValueNullFieldError.checkNotNull(
-                endTime, r'PerkuliahanItem', 'endTime'),
-            statusPerkuliahan: BuiltValueNullFieldError.checkNotNull(
-                statusPerkuliahan, r'PerkuliahanItem', 'statusPerkuliahan'));
+    _$PerkuliahanItem _$result;
+    try {
+      _$result = _$v ??
+          new _$PerkuliahanItem._(
+              idJadwal: BuiltValueNullFieldError.checkNotNull(
+                  idJadwal, r'PerkuliahanItem', 'idJadwal'),
+              tglJadwal: BuiltValueNullFieldError.checkNotNull(
+                  tglJadwal, r'PerkuliahanItem', 'tglJadwal'),
+              kodeMatkul: BuiltValueNullFieldError.checkNotNull(
+                  kodeMatkul, r'PerkuliahanItem', 'kodeMatkul'),
+              namaMatkul: BuiltValueNullFieldError.checkNotNull(
+                  namaMatkul, r'PerkuliahanItem', 'namaMatkul'),
+              beginTime: BuiltValueNullFieldError.checkNotNull(
+                  beginTime, r'PerkuliahanItem', 'beginTime'),
+              endTime: BuiltValueNullFieldError.checkNotNull(
+                  endTime, r'PerkuliahanItem', 'endTime'),
+              statusPerkuliahan: BuiltValueNullFieldError.checkNotNull(
+                  statusPerkuliahan, r'PerkuliahanItem', 'statusPerkuliahan'),
+              qrsecret: qrsecret,
+              mahasiswa: mahasiswa.build());
+    } catch (_) {
+      late String _$failedField;
+      try {
+        _$failedField = 'mahasiswa';
+        mahasiswa.build();
+      } catch (e) {
+        throw new BuiltValueNestedFieldError(
+            r'PerkuliahanItem', _$failedField, e.toString());
+      }
+      rethrow;
+    }
     replace(_$result);
     return _$result;
   }

@@ -51,16 +51,31 @@ class _HomePageState extends State<HomePage> {
           BlocListener<HomeBloc, HomeState>(listener: (context, state) {
             if (state.isSuccess) {
               log('$runtimeType : ${state.data}');
+
+              if (state.successType == HomeStateSuccessType.postQr &&
+                  state.message.isNotEmpty) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(
+                      state.message,
+                    ),
+                  ),
+                );
+              }
             }
 
             if (state.error.isNotEmpty) {
               if (state.errorType == HomeStateErrorType.expiredToken) {
                 // request new token
                 AuthLocal auth = BlocProvider.of<AuthBloc>(context).state.auth;
-                log('$runtimeType : running renew token...');
                 BlocProvider.of<AuthBloc>(context).renewToken(auth);
+              }
+
+              if (state.errorType == HomeStateErrorType.apiError) {
+                ScaffoldMessenger.of(context)
+                    .showSnackBar(SnackBar(content: Text(state.error)));
               } else {
-                log('$runtimeType : homestate.error => ${state.error}');
+                log('$runtimeType : ${state.error}');
               }
             }
           }),

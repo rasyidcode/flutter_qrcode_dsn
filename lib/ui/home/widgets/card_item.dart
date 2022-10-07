@@ -5,6 +5,7 @@ import 'package:flutter_presensi_dsn/data/models/perkuliahan_item.dart';
 import 'package:flutter_presensi_dsn/ui/auth/auth_bloc.dart';
 import 'package:flutter_presensi_dsn/ui/auth/auth_state.dart';
 import 'package:flutter_presensi_dsn/ui/home/home_bloc.dart';
+import 'package:flutter_presensi_dsn/ui/home/home_state.dart';
 import 'package:flutter_presensi_dsn/ui/home/widgets/card_title.dart';
 import 'package:flutter_presensi_dsn/ui/home/widgets/mahasiswa_item.dart';
 import 'package:flutter_presensi_dsn/ui/home/widgets/perkuliahan_time.dart';
@@ -16,6 +17,11 @@ class CardItem extends StatelessWidget {
 
   String getQrData() => 'PRESENSI_SECRET_${perkuliahanItem.idJadwal}';
 
+  bool isPostQrSucceed(HomeState state) =>
+      state.isSuccess &&
+      state.successType == HomeStateSuccessType.postQr &&
+      state.message.isNotEmpty;
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -24,6 +30,7 @@ class CardItem extends StatelessWidget {
           child: ClipPath(
             child: Column(
               children: [
+                // CARD BORDER
                 Container(
                   height: 8.0,
                   width: double.infinity,
@@ -37,9 +44,9 @@ class CardItem extends StatelessWidget {
                     borderRadius: BorderRadius.circular(5.0),
                   ),
                 ),
+                // CARD CONTENT
                 Padding(
                   padding: const EdgeInsets.all(16.0),
-                  // CARD CONTENT
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -70,50 +77,6 @@ class CardItem extends StatelessWidget {
                                 color: kButtonColor2),
                           ),
                         )
-                      else if (perkuliahanItem.statusPerkuliahan ==
-                          'not_started')
-                        BlocBuilder<AuthBloc, AuthState>(
-                          builder: (context, state) {
-                            return Container(
-                              width: double.infinity,
-                              alignment: Alignment.center,
-                              child: MaterialButton(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 30.0,
-                                ),
-                                onPressed: () {
-                                  String? accessToken = state.auth.accessToken;
-                                  if (accessToken != null &&
-                                      accessToken.isNotEmpty) {
-                                    BlocProvider.of<HomeBloc>(context).postQR(
-                                        accessToken,
-                                        int.parse(perkuliahanItem.idJadwal),
-                                        getQrData());
-                                  } else {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                        const SnackBar(
-                                            content:
-                                                Text('Access token is empty')));
-                                  }
-                                },
-                                minWidth: 0.0,
-                                materialTapTargetSize:
-                                    MaterialTapTargetSize.shrinkWrap,
-                                color: kButtonColor2,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(20.0),
-                                ),
-                                child: const Text(
-                                  'Buat QR',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 12.0,
-                                  ),
-                                ),
-                              ),
-                            );
-                          },
-                        )
                       else if (perkuliahanItem.statusPerkuliahan == 'ongoing')
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -123,59 +86,171 @@ class CardItem extends StatelessWidget {
                               endTime: perkuliahanItem.endTime,
                             ),
                             const SizedBox(height: 16.0),
-                            Column(
-                              children: [
-                                Align(
-                                  alignment: Alignment.center,
-                                  child: QrImage(
-                                    data: '123456',
-                                    version: QrVersions.auto,
-                                    size: 150,
-                                  ),
-                                ),
-                                const SizedBox(height: 16.0),
-                              ],
-                            ),
-                            // MAHASISWA LIST
-                            Column(
-                              children: [
-                                const CardTitle(title: 'Daftar Mahasiswa'),
-                                const SizedBox(height: 4.0),
-                                ListView.builder(
-                                    physics: const ScrollPhysics(),
-                                    shrinkWrap: true,
-                                    itemCount: 5,
-                                    itemBuilder: (context, index) {
-                                      return const MahasiswaItem();
-                                    }),
-                                const SizedBox(height: 16.0),
-                              ],
-                            ),
+                            BlocBuilder<HomeBloc, HomeState>(
+                              builder: (context, state) {
+                                if (state.isLoading &&
+                                    state.loadingType ==
+                                        HomeStateLoadingType.postQr) {
+                                  return Center(
+                                    child: Column(
+                                      children: const [
+                                        CircularProgressIndicator(),
+                                        SizedBox(height: 16.0),
+                                      ],
+                                    ),
+                                  );
+                                }
 
-                            Container(
-                              width: double.infinity,
-                              alignment: Alignment.center,
-                              child: MaterialButton(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 30.0,
-                                ),
-                                onPressed: () {},
-                                minWidth: 0.0,
-                                materialTapTargetSize:
-                                    MaterialTapTargetSize.shrinkWrap,
-                                color: kAccentColor,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(20.0),
-                                ),
-                                child: const Text(
-                                  'Akhiri Perkuliahan',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 12.0,
-                                  ),
-                                ),
-                              ),
-                            )
+                                return Column(
+                                  children: [
+                                    isPostQrSucceed(state) ||
+                                            perkuliahanItem.qrsecret != null
+                                        ? Column(
+                                            children: [
+                                              Align(
+                                                alignment: Alignment.center,
+                                                child: QrImage(
+                                                  data: getQrData(),
+                                                  version: QrVersions.auto,
+                                                  size: 150,
+                                                ),
+                                              ),
+                                              const SizedBox(height: 16.0),
+                                              Column(
+                                                children: [
+                                                  const CardTitle(
+                                                      title:
+                                                          'Daftar Mahasiswa'),
+                                                  const SizedBox(height: 8.0),
+                                                  ListView.builder(
+                                                    physics:
+                                                        const ScrollPhysics(),
+                                                    shrinkWrap: true,
+                                                    itemCount: perkuliahanItem
+                                                        .mahasiswa.length,
+                                                    itemBuilder:
+                                                        (context, index) {
+                                                      return MahasiswaItem(
+                                                          item: perkuliahanItem
+                                                                  .mahasiswa[
+                                                              index]);
+                                                    },
+                                                  )
+                                                ],
+                                              ),
+                                              const SizedBox(height: 16.0),
+                                            ],
+                                          )
+                                        : Container(),
+                                    if (perkuliahanItem.qrsecret != null)
+                                      BlocBuilder<AuthBloc, AuthState>(
+                                        builder: (context, state) {
+                                          return Container(
+                                            width: double.infinity,
+                                            alignment: Alignment.center,
+                                            child: MaterialButton(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                horizontal: 30.0,
+                                              ),
+                                              onPressed: () {
+                                                String? accessToken =
+                                                    state.auth.accessToken;
+                                                if (accessToken != null &&
+                                                    accessToken.isNotEmpty) {
+                                                  BlocProvider.of<HomeBloc>(
+                                                          context)
+                                                      .postQR(
+                                                          accessToken,
+                                                          int.parse(
+                                                              perkuliahanItem
+                                                                  .idJadwal),
+                                                          getQrData());
+                                                } else {
+                                                  ScaffoldMessenger.of(context)
+                                                      .showSnackBar(
+                                                    const SnackBar(
+                                                      content: Text(
+                                                          'Access token is empty'),
+                                                    ),
+                                                  );
+                                                }
+                                              },
+                                              minWidth: 0.0,
+                                              materialTapTargetSize:
+                                                  MaterialTapTargetSize
+                                                      .shrinkWrap,
+                                              color: kAccentColor,
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(20.0),
+                                              ),
+                                              child: const Text(
+                                                'Akhiri Perkuliahan',
+                                                style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 12.0,
+                                                ),
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                      )
+                                    else
+                                      BlocBuilder<AuthBloc, AuthState>(
+                                        builder: (context, state) {
+                                          return Container(
+                                            width: double.infinity,
+                                            alignment: Alignment.center,
+                                            child: MaterialButton(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                horizontal: 30.0,
+                                              ),
+                                              onPressed: () {
+                                                String? accessToken =
+                                                    state.auth.accessToken;
+                                                if (accessToken != null &&
+                                                    accessToken.isNotEmpty) {
+                                                  BlocProvider.of<HomeBloc>(
+                                                          context)
+                                                      .postQR(
+                                                          accessToken,
+                                                          int.parse(
+                                                              perkuliahanItem
+                                                                  .idJadwal),
+                                                          getQrData());
+                                                } else {
+                                                  ScaffoldMessenger.of(context)
+                                                      .showSnackBar(const SnackBar(
+                                                          content: Text(
+                                                              'Access token is empty')));
+                                                }
+                                              },
+                                              minWidth: 0.0,
+                                              materialTapTargetSize:
+                                                  MaterialTapTargetSize
+                                                      .shrinkWrap,
+                                              color: kButtonColor2,
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(20.0),
+                                              ),
+                                              child: const Text(
+                                                'Buat QR',
+                                                style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 12.0,
+                                                ),
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                      )
+                                  ],
+                                );
+                              },
+                            ),
                           ],
                         )
                       else

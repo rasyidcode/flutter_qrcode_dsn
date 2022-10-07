@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_presensi_dsn/constants.dart';
+import 'package:flutter_presensi_dsn/data/models/mahasiswa_item.dart'
+    as mhs_item;
 
 class MahasiswaItem extends StatelessWidget {
-  const MahasiswaItem({Key? key}) : super(key: key);
+  final mhs_item.MahasiswaItem item;
+  const MahasiswaItem({required this.item, Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -22,11 +25,11 @@ class MahasiswaItem extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Joko Widodo',
+                      item.namaLengkap,
                       style: Theme.of(context).textTheme.titleSmall,
                     ),
                     Text(
-                      '2020.11.2020.0001',
+                      item.nim,
                       style: Theme.of(context).textTheme.caption,
                     ),
                   ],

@@ -22,9 +22,10 @@ enum HomeStateLoadingType { initial, getList, postQr, logout }
 
 abstract class HomeState implements Built<HomeState, HomeStateBuilder> {
   String get error;
+  String get message;
   PerkuliahanList get data;
   bool get isLoading;
-  bool get isSuccess;
+  bool get isSuccess => data.data.isNotEmpty;
   HomeStateErrorType get errorType;
   HomeStateSuccessType get successType;
   HomeStateLoadingType get loadingType;
@@ -36,58 +37,57 @@ abstract class HomeState implements Built<HomeState, HomeStateBuilder> {
   factory HomeState.initial() {
     return HomeState((b) => b
       ..error = ''
+      ..message = ''
       ..errorType = HomeStateErrorType.initial
       ..loadingType = HomeStateLoadingType.initial
       ..successType = HomeStateSuccessType.initial
       ..data.replace(PerkuliahanList((b) => b
         ..data.replace(BuiltList<PerkuliahanItem>())
         ..total = 0))
-      ..isLoading = false
-      ..isSuccess = false);
+      ..isLoading = false);
   }
 
   factory HomeState.loading({
     HomeStateLoadingType type = HomeStateLoadingType.initial,
+    required PerkuliahanList list,
   }) {
     return HomeState((b) => b
       ..error = ''
+      ..message = ''
       ..errorType = HomeStateErrorType.initial
       ..loadingType = type
       ..successType = HomeStateSuccessType.initial
-      ..data.replace(PerkuliahanList((b) => b
-        ..data.replace(BuiltList<PerkuliahanItem>())
-        ..total = 0))
-      ..isLoading = true
-      ..isSuccess = false);
+      ..data.replace(list)
+      ..isLoading = true);
   }
 
   factory HomeState.error(
     String err, {
     HomeStateErrorType type = HomeStateErrorType.initial,
+    required PerkuliahanList list,
   }) {
     return HomeState((b) => b
       ..error = err
+      ..message = ''
       ..errorType = type
       ..loadingType = HomeStateLoadingType.initial
       ..successType = HomeStateSuccessType.initial
-      ..data.replace(PerkuliahanList((b) => b
-        ..data.replace(BuiltList<PerkuliahanItem>())
-        ..total = 0))
-      ..isLoading = false
-      ..isSuccess = false);
+      ..data.replace(list)
+      ..isLoading = false);
   }
 
   factory HomeState.success(
     PerkuliahanList list, {
     HomeStateSuccessType type = HomeStateSuccessType.initial,
+    String message = '',
   }) {
     return HomeState((b) => b
       ..error = ''
+      ..message = message
       ..errorType = HomeStateErrorType.initial
       ..loadingType = HomeStateLoadingType.initial
       ..successType = type
       ..data.replace(list)
-      ..isLoading = false
-      ..isSuccess = true);
+      ..isLoading = false);
   }
 }

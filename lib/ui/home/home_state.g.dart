@@ -10,11 +10,11 @@ class _$HomeState extends HomeState {
   @override
   final String error;
   @override
+  final String message;
+  @override
   final PerkuliahanList data;
   @override
   final bool isLoading;
-  @override
-  final bool isSuccess;
   @override
   final HomeStateErrorType errorType;
   @override
@@ -27,17 +27,17 @@ class _$HomeState extends HomeState {
 
   _$HomeState._(
       {required this.error,
+      required this.message,
       required this.data,
       required this.isLoading,
-      required this.isSuccess,
       required this.errorType,
       required this.successType,
       required this.loadingType})
       : super._() {
     BuiltValueNullFieldError.checkNotNull(error, r'HomeState', 'error');
+    BuiltValueNullFieldError.checkNotNull(message, r'HomeState', 'message');
     BuiltValueNullFieldError.checkNotNull(data, r'HomeState', 'data');
     BuiltValueNullFieldError.checkNotNull(isLoading, r'HomeState', 'isLoading');
-    BuiltValueNullFieldError.checkNotNull(isSuccess, r'HomeState', 'isSuccess');
     BuiltValueNullFieldError.checkNotNull(errorType, r'HomeState', 'errorType');
     BuiltValueNullFieldError.checkNotNull(
         successType, r'HomeState', 'successType');
@@ -57,9 +57,9 @@ class _$HomeState extends HomeState {
     if (identical(other, this)) return true;
     return other is HomeState &&
         error == other.error &&
+        message == other.message &&
         data == other.data &&
         isLoading == other.isLoading &&
-        isSuccess == other.isSuccess &&
         errorType == other.errorType &&
         successType == other.successType &&
         loadingType == other.loadingType;
@@ -71,9 +71,9 @@ class _$HomeState extends HomeState {
         $jc(
             $jc(
                 $jc(
-                    $jc($jc($jc(0, error.hashCode), data.hashCode),
-                        isLoading.hashCode),
-                    isSuccess.hashCode),
+                    $jc($jc($jc(0, error.hashCode), message.hashCode),
+                        data.hashCode),
+                    isLoading.hashCode),
                 errorType.hashCode),
             successType.hashCode),
         loadingType.hashCode));
@@ -83,9 +83,9 @@ class _$HomeState extends HomeState {
   String toString() {
     return (newBuiltValueToStringHelper(r'HomeState')
           ..add('error', error)
+          ..add('message', message)
           ..add('data', data)
           ..add('isLoading', isLoading)
-          ..add('isSuccess', isSuccess)
           ..add('errorType', errorType)
           ..add('successType', successType)
           ..add('loadingType', loadingType))
@@ -100,6 +100,10 @@ class HomeStateBuilder implements Builder<HomeState, HomeStateBuilder> {
   String? get error => _$this._error;
   set error(String? error) => _$this._error = error;
 
+  String? _message;
+  String? get message => _$this._message;
+  set message(String? message) => _$this._message = message;
+
   PerkuliahanListBuilder? _data;
   PerkuliahanListBuilder get data =>
       _$this._data ??= new PerkuliahanListBuilder();
@@ -108,10 +112,6 @@ class HomeStateBuilder implements Builder<HomeState, HomeStateBuilder> {
   bool? _isLoading;
   bool? get isLoading => _$this._isLoading;
   set isLoading(bool? isLoading) => _$this._isLoading = isLoading;
-
-  bool? _isSuccess;
-  bool? get isSuccess => _$this._isSuccess;
-  set isSuccess(bool? isSuccess) => _$this._isSuccess = isSuccess;
 
   HomeStateErrorType? _errorType;
   HomeStateErrorType? get errorType => _$this._errorType;
@@ -133,9 +133,9 @@ class HomeStateBuilder implements Builder<HomeState, HomeStateBuilder> {
     final $v = _$v;
     if ($v != null) {
       _error = $v.error;
+      _message = $v.message;
       _data = $v.data.toBuilder();
       _isLoading = $v.isLoading;
-      _isSuccess = $v.isSuccess;
       _errorType = $v.errorType;
       _successType = $v.successType;
       _loadingType = $v.loadingType;
@@ -165,11 +165,11 @@ class HomeStateBuilder implements Builder<HomeState, HomeStateBuilder> {
           new _$HomeState._(
               error: BuiltValueNullFieldError.checkNotNull(
                   error, r'HomeState', 'error'),
+              message: BuiltValueNullFieldError.checkNotNull(
+                  message, r'HomeState', 'message'),
               data: data.build(),
               isLoading: BuiltValueNullFieldError.checkNotNull(
                   isLoading, r'HomeState', 'isLoading'),
-              isSuccess: BuiltValueNullFieldError.checkNotNull(
-                  isSuccess, r'HomeState', 'isSuccess'),
               errorType: BuiltValueNullFieldError.checkNotNull(
                   errorType, r'HomeState', 'errorType'),
               successType: BuiltValueNullFieldError.checkNotNull(

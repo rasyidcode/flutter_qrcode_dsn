@@ -8,8 +8,12 @@ part of serializers;
 
 Serializers _$serializers = (new Serializers().toBuilder()
       ..add(Auth.serializer)
+      ..add(MahasiswaItem.serializer)
       ..add(PerkuliahanItem.serializer)
       ..add(PerkuliahanList.serializer)
+      ..addBuilderFactory(
+          const FullType(BuiltList, const [const FullType(MahasiswaItem)]),
+          () => new ListBuilder<MahasiswaItem>())
       ..addBuilderFactory(
           const FullType(BuiltList, const [const FullType(PerkuliahanItem)]),
           () => new ListBuilder<PerkuliahanItem>()))

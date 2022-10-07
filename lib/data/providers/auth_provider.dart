@@ -11,9 +11,8 @@ class AuthProvider extends BaseProvider {
   AuthProvider(this._presensiAppDb);
 
   Future<void> updateToken(AuthLocal auth) async {
-    var result = await (await _presensiAppDb.db)
+    await (await _presensiAppDb.db)
         ?.update('auth', auth.toMap(), where: 'id = ?', whereArgs: [auth.id]);
-    log('$runtimeType : update result : $result');
   }
 
   Future<void> removeAuth() async {
