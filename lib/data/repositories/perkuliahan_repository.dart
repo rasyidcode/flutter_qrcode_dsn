@@ -49,4 +49,17 @@ class PerkuliahanRepository {
 
     return result;
   }
+
+  Future<String> submitPerkuliahan(String accessToken, int idJadwal) async {
+    final result = await _presensiAppBackendApi.submitPerkuliahan(
+      accessToken: accessToken,
+      idJadwal: idJadwal,
+    );
+
+    if (result == null) {
+      throw RepositoryErrorException('Message returns null');
+    }
+
+    return result;
+  }
 }

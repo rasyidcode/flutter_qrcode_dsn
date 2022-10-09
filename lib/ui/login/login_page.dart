@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_presensi_dsn/constants.dart';
+import 'package:flutter_presensi_dsn/ui/home/home_page.dart';
 import 'package:flutter_presensi_dsn/ui/login/login_bloc.dart';
 import 'package:flutter_presensi_dsn/ui/login/login_state.dart';
 import 'package:flutter_presensi_dsn/ui/login/widgets/login_button.dart';
@@ -67,7 +68,8 @@ class _LoginPageState extends State<LoginPage> {
       child: BlocListener<LoginBloc, LoginState>(
         listener: (context, state) {
           if (state.isSuccess) {
-            log('$runtimeType : ready to home page');
+            Navigator.of(context).pushReplacement(
+                MaterialPageRoute(builder: (_) => const HomePage()));
           }
 
           if (state.error.isNotEmpty) {

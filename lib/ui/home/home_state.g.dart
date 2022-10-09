@@ -21,6 +21,8 @@ class _$HomeState extends HomeState {
   final HomeStateSuccessType successType;
   @override
   final HomeStateLoadingType loadingType;
+  @override
+  final int currentIdJadwal;
 
   factory _$HomeState([void Function(HomeStateBuilder)? updates]) =>
       (new HomeStateBuilder()..update(updates))._build();
@@ -32,7 +34,8 @@ class _$HomeState extends HomeState {
       required this.isLoading,
       required this.errorType,
       required this.successType,
-      required this.loadingType})
+      required this.loadingType,
+      required this.currentIdJadwal})
       : super._() {
     BuiltValueNullFieldError.checkNotNull(error, r'HomeState', 'error');
     BuiltValueNullFieldError.checkNotNull(message, r'HomeState', 'message');
@@ -43,6 +46,8 @@ class _$HomeState extends HomeState {
         successType, r'HomeState', 'successType');
     BuiltValueNullFieldError.checkNotNull(
         loadingType, r'HomeState', 'loadingType');
+    BuiltValueNullFieldError.checkNotNull(
+        currentIdJadwal, r'HomeState', 'currentIdJadwal');
   }
 
   @override
@@ -62,7 +67,8 @@ class _$HomeState extends HomeState {
         isLoading == other.isLoading &&
         errorType == other.errorType &&
         successType == other.successType &&
-        loadingType == other.loadingType;
+        loadingType == other.loadingType &&
+        currentIdJadwal == other.currentIdJadwal;
   }
 
   @override
@@ -71,12 +77,14 @@ class _$HomeState extends HomeState {
         $jc(
             $jc(
                 $jc(
-                    $jc($jc($jc(0, error.hashCode), message.hashCode),
-                        data.hashCode),
-                    isLoading.hashCode),
-                errorType.hashCode),
-            successType.hashCode),
-        loadingType.hashCode));
+                    $jc(
+                        $jc($jc($jc(0, error.hashCode), message.hashCode),
+                            data.hashCode),
+                        isLoading.hashCode),
+                    errorType.hashCode),
+                successType.hashCode),
+            loadingType.hashCode),
+        currentIdJadwal.hashCode));
   }
 
   @override
@@ -88,7 +96,8 @@ class _$HomeState extends HomeState {
           ..add('isLoading', isLoading)
           ..add('errorType', errorType)
           ..add('successType', successType)
-          ..add('loadingType', loadingType))
+          ..add('loadingType', loadingType)
+          ..add('currentIdJadwal', currentIdJadwal))
         .toString();
   }
 }
@@ -127,6 +136,11 @@ class HomeStateBuilder implements Builder<HomeState, HomeStateBuilder> {
   set loadingType(HomeStateLoadingType? loadingType) =>
       _$this._loadingType = loadingType;
 
+  int? _currentIdJadwal;
+  int? get currentIdJadwal => _$this._currentIdJadwal;
+  set currentIdJadwal(int? currentIdJadwal) =>
+      _$this._currentIdJadwal = currentIdJadwal;
+
   HomeStateBuilder();
 
   HomeStateBuilder get _$this {
@@ -139,6 +153,7 @@ class HomeStateBuilder implements Builder<HomeState, HomeStateBuilder> {
       _errorType = $v.errorType;
       _successType = $v.successType;
       _loadingType = $v.loadingType;
+      _currentIdJadwal = $v.currentIdJadwal;
       _$v = null;
     }
     return this;
@@ -175,7 +190,9 @@ class HomeStateBuilder implements Builder<HomeState, HomeStateBuilder> {
               successType: BuiltValueNullFieldError.checkNotNull(
                   successType, r'HomeState', 'successType'),
               loadingType: BuiltValueNullFieldError.checkNotNull(
-                  loadingType, r'HomeState', 'loadingType'));
+                  loadingType, r'HomeState', 'loadingType'),
+              currentIdJadwal: BuiltValueNullFieldError.checkNotNull(
+                  currentIdJadwal, r'HomeState', 'currentIdJadwal'));
     } catch (_) {
       late String _$failedField;
       try {

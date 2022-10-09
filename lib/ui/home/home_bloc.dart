@@ -24,6 +24,12 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       ..qrCode = qrCode));
   }
 
+  void submitPerkuliahan(String accessToken, int idJadwal) {
+    add(SubmitPerkuliahan((b) => b
+      ..idJadwal = idJadwal
+      ..accessToken = accessToken));
+  }
+
   HomeBloc(this._perkuliahanRepository) : super(HomeState.initial()) {
     on<GetListMatkul>((event, emit) async {
       emit(HomeState.loading(
@@ -61,6 +67,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       emit(HomeState.loading(
         type: HomeStateLoadingType.postQr,
         list: state.data,
+        currentIdJadwal: event.idJadwal,
       ));
 
       await Future.delayed(const Duration(seconds: 2));
@@ -80,11 +87,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             item;
         state.data.rebuild((b) => b..data.replace(newList.toBuiltList()));
 
-        emit(HomeState.success(
-          state.data,
-          type: HomeStateSuccessType.postQr,
-          message: message,
-        ));
+        emit(HomeState.success(state.data,
+            type: HomeStateSuccessType.postQr, message: message));
       } on ApiAccessErrorException catch (e) {
         emit(HomeState.error(
           e.message,
@@ -112,7 +116,56 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       }
     });
     on<SubmitPerkuliahan>((event, emit) async {
-      // TODO: implement event handler
+      emit(HomeState.loading(
+        type: HomeStateLoadingType.submitPerkuliahan,
+        list: state.data,
+        currentIdJadwal: event.idJadwal,
+      ));
+
+      await Future.delayed(const Duration(seconds: 2));
+
+      try {
+        final message = await _perkuliahanRepository.submitPerkuliahan(
+            event.accessToken, event.idJadwal);
+
+        PerkuliahanItem item = await _perkuliahanRepository.getDetail(
+            event.accessToken, event.idJadwal);
+
+        var newList = state.data.data.toList();
+        newList[newList.indexWhere((p0) => p0.idJadwal == item.idJadwal)] =
+            item;
+        state.data.rebuild((b) => b..data.replace(newList.toBuiltList()));
+
+        emit(HomeState.success(
+          state.data,
+          type: HomeStateSuccessType.submitPerkuliahan,
+          message: message,
+        ));
+      } on ApiAccessErrorException catch (e) {
+        emit(HomeState.error(
+          e.message,
+          type: HomeStateErrorType.apiError,
+          list: state.data,
+        ));
+      } on ApiExpiredTokenExecption catch (e) {
+        emit(HomeState.error(
+          e.message,
+          type: HomeStateErrorType.expiredToken,
+          list: state.data,
+        ));
+      } on RepositoryErrorException catch (e) {
+        emit(HomeState.error(
+          e.message,
+          type: HomeStateErrorType.responseFormatError,
+          list: state.data,
+        ));
+      } on Exception catch (_) {
+        emit(HomeState.error(
+          'Something went wrong',
+          type: HomeStateErrorType.unknownError,
+          list: state.data,
+        ));
+      }
     });
   }
 }

@@ -10,6 +10,7 @@ import 'package:flutter_presensi_dsn/ui/home/home_bloc.dart';
 import 'package:flutter_presensi_dsn/ui/home/home_state.dart';
 import 'package:flutter_presensi_dsn/ui/home/widgets/home_content.dart';
 import 'package:flutter_presensi_dsn/ui/home/widgets/me_content.dart';
+import 'package:flutter_presensi_dsn/ui/login/login_page.dart';
 import 'package:kiwi/kiwi.dart';
 
 class HomePage extends StatefulWidget {
@@ -50,9 +51,9 @@ class _HomePageState extends State<HomePage> {
         listeners: [
           BlocListener<HomeBloc, HomeState>(listener: (context, state) {
             if (state.isSuccess) {
-              log('$runtimeType : ${state.data}');
-
-              if (state.successType == HomeStateSuccessType.postQr &&
+              if ((state.successType == HomeStateSuccessType.postQr ||
+                      state.successType ==
+                          HomeStateSuccessType.submitPerkuliahan) &&
                   state.message.isNotEmpty) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
@@ -90,6 +91,11 @@ class _HomePageState extends State<HomePage> {
                   ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(content: Text('Something went wrong')));
                 }
+              }
+
+              if (state.successType == AuthStateSuccessType.logoutSucceed) {
+                Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(builder: (_) => const LoginPage()));
               }
             }
 

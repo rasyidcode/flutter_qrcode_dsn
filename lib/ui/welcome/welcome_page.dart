@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_presensi_dsn/constants.dart';
+import 'package:flutter_presensi_dsn/ui/login/login_page.dart';
 import 'package:flutter_presensi_dsn/ui/welcome/welcome_bloc.dart';
 import 'package:flutter_presensi_dsn/ui/welcome/welcome_state.dart';
 import 'package:flutter_presensi_dsn/ui/welcome/widgets/start_button.dart';
@@ -35,7 +36,8 @@ class _WelcomePageState extends State<WelcomePage> {
       child: BlocListener<WelcomeBloc, WelcomeState>(
         listener: (context, state) {
           if (state.isSuccess) {
-            log('$runtimeType : ready to login page');
+            Navigator.of(context)
+                .push(MaterialPageRoute(builder: (_) => const LoginPage()));
           }
         },
         child: Scaffold(

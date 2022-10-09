@@ -10,6 +10,7 @@ import 'package:flutter_presensi_dsn/ui/home/home_bloc.dart';
 import 'package:flutter_presensi_dsn/ui/home/home_state.dart';
 import 'package:flutter_presensi_dsn/ui/home/widgets/card_item.dart';
 import 'package:flutter_presensi_dsn/extensions/date_time_extensions.dart';
+import 'package:flutter_presensi_dsn/ui/home/widgets/card_item2.dart';
 
 class HomeContent extends StatefulWidget {
   const HomeContent({Key? key}) : super(key: key);
@@ -114,6 +115,8 @@ class _HomeContentState extends State<HomeContent> {
                   if (state.errorType == HomeStateErrorType.listEmpty) {
                     return const Center(
                         child: Text('Tidak ada perkuliahan hari ini'));
+                  } else {
+                    return Center(child: Text(state.error));
                   }
                 }
 
@@ -121,12 +124,12 @@ class _HomeContentState extends State<HomeContent> {
                   return ListView.builder(
                     itemCount: state.data.total,
                     itemBuilder: (context, index) {
-                      return CardItem(perkuliahanItem: state.data.data[index]);
+                      return CardItem2(perkuliahanItem: state.data.data[index]);
                     },
                   );
                 }
 
-                return const Center(child: Text('unknown state'));
+                return const Center(child: CircularProgressIndicator());
               },
             ),
           ),

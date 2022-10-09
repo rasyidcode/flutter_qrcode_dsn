@@ -49,11 +49,11 @@ class PresensiAppBackendApi {
   // auth - logout
   Future<String?> logout(
       {required String accessToken, required String refreshToken}) async {
-    final response = await _client.post(Uri.parse('$baseApiURL/auth/logout'),
-        headers: {
-          HttpHeaders.authorizationHeader: accessToken,
-          'Refresh-Token': refreshToken
-        });
+    final response =
+        await _client.post(Uri.parse('$baseApiURL/auth/logout'), headers: {
+      HttpHeaders.authorizationHeader: 'Bearer $accessToken',
+      'Refresh-Token': refreshToken
+    });
     if (response.statusCode != 200) {
       throw ApiAccessErrorException(jsonDecode(response.body)['message']);
     }
@@ -125,8 +125,6 @@ class PresensiAppBackendApi {
       'id_jadwal': idJadwal.toString()
     });
 
-    log('$runtimeType : ${response.body}');
-
     if (response.statusCode != 200) {
       if (response.statusCode == 401) {
         String? decoded = jsonDecode(response.body)['message'];
@@ -150,9 +148,9 @@ class PresensiAppBackendApi {
       {required String accessToken, required int idJadwal}) async {
     final response = await _client
         .post(Uri.parse('$baseApiURL/dosen/submit-perkuliahan'), headers: {
-      HttpHeaders.authorizationHeader: accessToken,
+      HttpHeaders.authorizationHeader: 'Bearer $accessToken',
     }, body: {
-      'id_jadwal': idJadwal
+      'id_jadwal': idJadwal.toString()
     });
 
     if (response.statusCode != 200) {
