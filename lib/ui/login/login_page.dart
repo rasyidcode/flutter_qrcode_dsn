@@ -188,9 +188,34 @@ class _LoginPageState extends State<LoginPage> {
                                 ),
                               ),
                             ),
-                            LoginButton(
-                              user: _usernameTextController.text,
-                              pass: _passwordextController.text,
+                            MaterialButton(
+                              onPressed: () {
+                                var user = _usernameTextController.text;
+                                var pass = _passwordextController.text;
+                                if (user.isNotEmpty && pass.isNotEmpty) {
+                                  log('$runtimeType : $user');
+                                  log('$runtimeType : $pass');
+                                  _loginBloc.doLogin(user, pass);
+                                } else {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                          content: Text(
+                                              'Please provide username or password')));
+                                }
+                              },
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 40.0),
+                              color: kPrimaryButtonColor,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(50.0),
+                              ),
+                              child: const Text(
+                                'Login',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black87,
+                                ),
+                              ),
                             ),
                             const SizedBox(height: 8.0),
                             BlocBuilder<LoginBloc, LoginState>(
