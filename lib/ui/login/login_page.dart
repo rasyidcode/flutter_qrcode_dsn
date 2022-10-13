@@ -68,8 +68,9 @@ class _LoginPageState extends State<LoginPage> {
       child: BlocListener<LoginBloc, LoginState>(
         listener: (context, state) {
           if (state.isSuccess) {
-            Navigator.of(context).pushReplacement(
-                MaterialPageRoute(builder: (_) => const HomePage()));
+            Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(builder: (_) => const HomePage()),
+                (Route route) => false);
           }
 
           if (state.error.isNotEmpty) {
@@ -193,8 +194,6 @@ class _LoginPageState extends State<LoginPage> {
                                 var user = _usernameTextController.text;
                                 var pass = _passwordextController.text;
                                 if (user.isNotEmpty && pass.isNotEmpty) {
-                                  log('$runtimeType : $user');
-                                  log('$runtimeType : $pass');
                                   _loginBloc.doLogin(user, pass);
                                 } else {
                                   ScaffoldMessenger.of(context).showSnackBar(
